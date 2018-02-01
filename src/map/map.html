@@ -1,0 +1,37 @@
+<ion-header class="bma-header">
+    <ion-navbar class="bma-navbar">
+        <ion-title class="bma-title">
+            <img src="url(/../assets/img/BikeMapsLogo.png" class="bma-header-logo">
+            <div class="bma-header-text">BikeMaps</div>
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="presentPopover($event)">
+                <ion-icon name="menu"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content #content>
+    <div id="map"></div>
+</ion-content>
+
+
+<ion-menu side="right" [content]="content" class="bma-side-menu">
+  <ion-header class="bma-side-menu-header">
+    <ion-toolbar>
+      <ion-title>{{ "MAP.LAYERS" | translate }}</ion-title>
+      <ion-buttons end>
+        <button ion-button icon-only (click)="closeMenu()">
+          // <ion-icon class="bma-icon-blue" name="ion-close-round"></ion-icon>
+          <ion-icon name="ion-close-round"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    Legend Content
+  </ion-content>
+
+</ion-menu>

@@ -1,0 +1,8 @@
+"typeRoots": [
+  "node_modules/@types"
+],
+"types": [
+  "leaflet",
+  "leaflet-markercluster",
+  "leaflet.awesome-markers"
+]

@@ -1,0 +1,12 @@
+{
+  "MAP": {
+    "LAYERS": "Layers",
+    "WELCOME": "Welcome to BikeMaps!",
+    "WELCOME_MESSAGE": "BikeMaps is a crowdsource tool for global mapping of cycling safety. Using the icon button, add your own data on cycling crashes, near misses, hazards and thefts. Data will be used for analysis of cycling safety trends.",
+    "WELCOME_DISMISS": "Continue",
+    "WELCOME_HIDE": "Do not show this message again."
+  },
+  "LEGEND_LAYERS": "Dogs",
+	"MENU_ABOUT" : "About",
+	"MENU_DOG": "Dog"
+}

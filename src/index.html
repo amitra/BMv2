@@ -11,8 +11,22 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
 
+  <!-- Leaflet css -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+        integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+        crossorigin=""/>
+
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>
+
+  <!-- Leaflet source -->
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+          integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+          crossorigin=""></script>
+  <!--Esri Leaflet plugin -->
+  <script src="https://unpkg.com/esri-leaflet@2.1.1/dist/esri-leaflet.js"
+          integrity="sha512-ECQqaYZke9cSdqlFG08zSkudgrdF6I1d8ViSa7I3VIszJyVqw4ng1G8sehEXlumdMnFYfzY0tMgdQa4WCs9IUw=="
+          crossorigin=""></script>
 
   <!-- un-comment this code to enable service worker
   <script>
@@ -22,7 +36,8 @@
         .catch(err => console.error('Error', err));
     }
   </script>-->
-
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/leaflet.awesome-markers.css">
   <link href="build/main.css" rel="stylesheet">
 
 </head>
@@ -40,6 +55,8 @@
 
   <!-- The main bundle js is generated during the build process -->
   <script src="build/main.js"></script>
+
+  <script src="assets/js/leaflet.awesome-markers.min.js"></script>
 
 </body>
 </html>

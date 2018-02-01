@@ -1,0 +1,24 @@
+<ion-header class="bma-header">
+  <ion-toolbar>
+    <ion-title>
+      {{ "MAP.WELCOME" | translate }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="outer-content">
+  <div class="bma-about">
+    {{ "MAP.WELCOME_MESSAGE" | translate }}
+  </div>
+
+  <ion-buttons>
+    <button ion-button color="bma-blue" class="bma-button bma-welcome-button" (click)="dismiss()">
+      {{ "MAP.WELCOME_DISMISS" | translate }}
+      </button>
+  </ion-buttons>
+
+  <ion-item>
+    <ion-label>{{"MAP.WELCOME_HIDE" | translate}}</ion-label>
+    <ion-checkbox color="bma-blue" [(ngModel)]="hideWelcome"></ion-checkbox>
+  </ion-item>
+</ion-content>
