@@ -35,20 +35,6 @@ export class PopupService {
                 popup += '<br><div class="popup-details"><strong>Details:</strong> ' + feature.properties.details + '</div>';
             }
         } else return "error";
-        // } else if (type === "official") {
-        //     popup = "<strong>Type:</strong> " + feature.properties.official_type;
-        //     if(feature.properties.details){
-        //         popup += " (" + feature.properties.details + ")";
-        //     }
-        //     if(feature.properties.time){
-        //         var date = moment(feature.properties.date + "T" + feature.properties.time).format("MMM. D, YYYY, h:mma");
-        //     }else{
-        //         var date = moment(feature.properties.date).format("MMM. D, YYYY");
-        //     }
-        //     popup += '<br><strong>Date:</strong> ' + date;
-        //     popup += '<br><strong>Data source: </strong> ' + feature.properties.data_source + '<a href="#" ng-show="feature.properties.metadata" data-toggle="collapse" data-target="#official-metadata"><small> (metadata)</small></a><br>' + '<div id="official-metadata" class="metadata collapse">' + '<strong>Metadata: </strong><small>' + feature.properties.metadata + '</small></div>';
-
-        // } else return "error";
 
         return popup;
     }

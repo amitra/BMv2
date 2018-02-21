@@ -1,4 +1,20 @@
 {
+    "ACTIONSHEET": {
+      "TITLE": "What type of incident are you reporting?",
+      "COLLISION": "Collision",
+      "NEARMISS": "Quasi-collision",
+      "HAZARD" : "Danger",
+      "THEFT": "Vol",
+      "CNACEL": "Annuler"
+  },
+  "BUTTONS": {
+      "CANCEL": "Annuler",
+      "CONTINUE": "Continuer"
+  },
+    "HAZARD": {
+      "TITLE": "Quasi-collision",
+      "HAZARD_DETAILS": "Détails de Quasi-collision"
+  },
   "MAP": {
     "LAYERS": "Les Couches",
     "WELCOME": "Bienvenue à BikeMaps!",
@@ -6,7 +22,6 @@
     "WELCOME_DISMISS": "Continuer",
     "WELCOME_HIDE": "Ne plus afficher ce message."
   },
-
   "LEGEND_LAYERS": "Les Couches",
 	"MENU_ABOUT" : "A propos",
 	"MENU_DOG": "Chien"

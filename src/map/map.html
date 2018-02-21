@@ -13,7 +13,23 @@
 </ion-header>
 
 <ion-content #content>
+    <div *ngIf="showTargetMarker">
+        <div class="awesome-marker-icon-lightblue awesome-marker bma-target-marker">
+            <i class="fa fa-bicycle icon-black bma-target-bike"></i>
+        </div>
+        <img class="bma-target-cross" src="url(/../assets/img/PinCross.png">
+    </div>
     <div id="map"></div>
+    <div class="bma-button-group" *ngIf="showTargetMarker">
+        <button ion-button ion-start class="bma-button bma-button-cancel" (click)="cancelReport()">
+            <ion-icon name="close"></ion-icon>
+            <span class="bma-button-span">{{ "BUTTONS.CANCEL" | translate }}</span>
+        </button>
+        <button ion-button ion-start class="bma-button bma-button-continue" (click)="showReportOptions()">
+            <ion-icon name="checkmark"></ion-icon>
+            <span class="bma-button-span">{{ "BUTTONS.CONTINUE" | translate }}</span>
+        </button>
+    </div>
 </ion-content>
 
 

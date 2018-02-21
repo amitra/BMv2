@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { MenuController, NavController, Platform, PopoverController } from "ionic-angular";
+import { TranslateService } from "@ngx-translate/core";
+import { ActionSheetController, MenuController, NavController, Platform, PopoverController } from "ionic-angular";
 import { PopoverPage } from "../pages/popover/popover";
+import { HazardPage } from "../pages/hazard/hazard";
 import { IconService } from "../services/IconService";
 import { DataService } from "../services/DataService";
 import { PopupService } from "../services/PopupService";
@@ -23,6 +25,9 @@ export class MapPage implements OnInit {
 
     // A variable for the leaflet map
     map;
+
+    // Flag for hiding/showing target icon
+    showTargetMarker = false;
 
     // Esri basemap
     esriBM;
@@ -68,7 +73,13 @@ export class MapPage implements OnInit {
     // An object for syncing state of legend and state of markers on the map
     legend;
 
-    constructor(public menuCtrl:MenuController, public navCtrl:NavController, public popoverCtrl:PopoverController, public platform:Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService) {
+    // Strings that need translation in Javascript
+    trans = {
+        
+    };
+
+    constructor(public actionSheetController: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translate: TranslateService) {
+        translate.setDefaultLang("en");
     }
 
     ngOnInit():void {
@@ -152,56 +163,73 @@ export class MapPage implements OnInit {
     this.alertAreaLayer = L.featureGroup([]);
   }
 
-  // Add buttons to the map
-  addButtons(menuCtrl: MenuController):void {
+  
+    // Add buttons to the map
+    addButtons(menuCtrl: MenuController):void {
+        const __this = this;
 
-      // Add the legend toggle button
-      L.easyButton({
-          id: "legend-toggle",
-          position: "topright",
-          leafletClasses: true,
-          states: [{
-              stateName: "toggle-legend",
-              onClick: function () {
-                  menuCtrl.open();
-              },
-              icon: "fa-truck",
-              title: "legend-toggle"
-          }]
-      }).addTo(this.map);
+        // Add the legend toggle button
+        L.easyButton({
+            id: "legend-toggle",
+            position: "topright",
+            leafletClasses: true,
+            states: [{
+                stateName: "toggle-legend",
+                onClick: function () {
+                    menuCtrl.open();
+                },
+                icon: "fa-truck",
+                title: "legend-toggle"
+            }]
+        }).addTo(this.map);
 
-      // Add the geolocate button
-      L.easyButton({
-          id: "geolocate_bttn",
-          position: "topleft",
-          leafletClasses: true,
-          states: [{
-              stateName: "geolocate",
-              onClick: function (btn, map) {
-                map.locate({
-                  setView: true,
-                  watch: false,
-                  maxZoom: 15,
-                  enableHighAccuracy: true,
-                  timeout: 10000,
-                  maximumAge: 300,
-                })
-                  .on('locationfound', function (location) {
-                    /*          extendedBounds = getExtendedBounds($scope.map.getBounds());
-                     $ionicLoading.hide(); */
-                  })
-                  .on('locationerror', function (e) {
-                    console.log(e);
-                    // $ionicLoading.hide();
-                    // navigator.notification.alert("We could not find your current location. Please enable location services.", null,"Location access denied");
-                  }
-                )
-              },
-              icon: "fa fa-crosshairs",
-              title: "geolocate"
-          }]
-      }).addTo(this.map);
-  }
+        // Add the geolocate button
+        L.easyButton({
+            id: "geolocate_bttn",
+            position: "topleft",
+            leafletClasses: true,
+            states: [{
+                stateName: "geolocate",
+                onClick: function (btn, map) {
+                    map.locate({
+                    setView: true,
+                    watch: false,
+                    maxZoom: 15,
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300,
+                    })
+                    .on('locationfound', function (location) {
+                        /*          extendedBounds = getExtendedBounds($scope.map.getBounds());
+                        $ionicLoading.hide(); */
+                    })
+                    .on('locationerror', function (e) {
+                        console.log(e);
+                        // $ionicLoading.hide();
+                        // navigator.notification.alert("We could not find your current location. Please enable location services.", null,"Location access denied");
+                    }
+                    )
+                },
+                icon: "fa fa-crosshairs",
+                title: "geolocate"
+            }]
+        }).addTo(this.map);
+
+        // Add the report button
+        L.easyButton({
+            id: "report",
+            position: "topleft",
+            leafletClasses: true,
+            states: [{
+                stateName: "report",
+                onClick: function () {
+                    __this.addReport();
+                },
+                icon: "fa-map-marker",
+                title: "report"
+            }]
+        }).addTo(this.map);
+    }
 
   // Setup the various event handlers
   setupEventHandlers() {
@@ -625,9 +653,56 @@ pieChart(cluster) {
         }
     }
 
-
-
     closeMenu() {
         this.menuCtrl.close();
+    }
+    
+    // Temporarily hide incident data and show map reporting UI
+    addReport = () => {
+        if (this.showTargetMarker === false) {
+            this.map.removeLayer(this.incidentData);
+            this.showTargetMarker = true;
+            this.vibration.vibrate(100);
+        } else {
+            this.cancelReport();
+        }
+    };
+
+    // Restore incident data and hide map reporting UI
+    cancelReport = () => {
+        this.showTargetMarker = false;
+        this.map.addLayer(this.incidentData);
+    }
+ 
+    // Show the report options on an ActionSheet
+    showReportOptions() {
+        const actionSheet = this.actionSheetController.create({
+            title: "What type of incident are you reporting?",
+            buttons: [
+                { 
+                    text: this.translate.instant("ACTIONSHEET.COLLISION"),
+                },
+                { 
+                    text: this.translate.instant("ACTIONSHEET.NEARMISS"),
+                },
+                {
+                    text: this.translate.instant("ACTIONSHEET.HAZARD"),
+                    handler: () => {
+                        this.cancelReport();
+                        this.navCtrl.push(HazardPage);
+                    }
+                },
+                {
+                    text: this.translate.instant("ACTIONSHEET.THEFT"),
+                },
+                { 
+                    text: this.translate.instant("ACTIONSHEET.CANCEL"),
+                    role: "cancel",
+                    handler: () => { this.cancelReport() }
+                }
+            ]
+        });
+
+        actionSheet.present();
     }
 }

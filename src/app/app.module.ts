@@ -8,6 +8,7 @@ import { LegendPage } from "../legend/legend";
 import { HomePage } from "../pages/home/home";
 import { ListPage } from "../pages/list/list";
 import { PopoverPage } from "../pages/popover/popover";
+import { HazardPage } from "../pages/hazard/hazard";
 import { IconService } from "../services/IconService";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
@@ -18,6 +19,13 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { Vibration } from "@ionic-native/vibration";
 import { DataService } from "../services/DataService";
 import { PopupService } from "../services/PopupService";
+import { BirthMonthService } from "../services/BirthMonthService";
+import { BirthYearService } from "../services/BirthYearService";
+import { GenderService } from "../services/GenderService";
+import { CyclingFrequencyService } from "../services/CyclingFrequencyService";
+import { BasicSelect } from "../components/basic_select/basic_select";
+import { BasicSelectItems } from "../components/basic_select_items/basic_select_items";
+import { HazardFormService } from "../services/Form_Services/HazardFormService";
 
 export function TranslateLoaderFactory(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -31,7 +39,10 @@ export function TranslateLoaderFactory(http: Http) {
     MapPage,
     WelcomeModal,
     PopoverPage,
-    LegendPage
+    LegendPage,
+    HazardPage,
+    BasicSelect,
+    BasicSelectItems
   ],
   imports: [
     BrowserModule,
@@ -54,7 +65,9 @@ export function TranslateLoaderFactory(http: Http) {
     MapPage,
     WelcomeModal,
     PopoverPage,
-    LegendPage
+    LegendPage,
+    HazardPage,
+    BasicSelectItems
   ],
   providers: [
     StatusBar,
@@ -63,7 +76,12 @@ export function TranslateLoaderFactory(http: Http) {
     Vibration,
     IconService,
     DataService,
-    PopupService
+    PopupService,
+    BirthYearService,
+    BirthMonthService,
+    GenderService,
+    CyclingFrequencyService,
+    HazardFormService
   ]
 })
 export class AppModule {}

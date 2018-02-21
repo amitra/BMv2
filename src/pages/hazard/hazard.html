@@ -1,0 +1,84 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+                <img src="url(/../assets/img/BikeMapsLogo.png" class="bma-header-logo">
+            {{ "HAZARD.TITLE" | translate }}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+  
+<ion-content id="hazard">
+    <form>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('detailsOpen')">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="detailsOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!detailsOpen"></ion-icon>
+                    {{ "HAZARD.HAZARD_DETAILS" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item *ngIf="detailsOpen">
+                    <ion-label stacked>{{ "HAZARD.DATE" | translate }}</ion-label>
+                    <ion-datetime displayFormat="MMM DD, YYYY" pickerFormat="MMM DD, YYYY" [(ngModel)]="hazardDetails.selectedDate" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <ion-label stacked>{{ "HAZARD.TIME" | translate }}</ion-label>
+                    <ion-datetime displayFormat="hh:mm A" pickerFormat="hh:mm A" [(ngModel)]="hazardDetails.selectedTime" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label>{{ "HAZARD.TYPE" | translate }}</label>
+                    <basic-select [(selectedItem)]="hazardDetails.selectedHazardType" [displayText]="hazardDetails.selectedHazardType.text" [headerText]="'HAZARD.SELECT_TYPE' | translate" [items]="tempHazardChoices"></basic-select>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('descriptionOpen')">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="descriptionOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!descriptionOpen"></ion-icon>
+                    {{ "HAZARD.DESCRIPTION" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item *ngIf="descriptionOpen">
+                    <ion-label floating class="bma-textarea-label">
+                        {{ "HAZARD.DESCRIPTION_TEXT" | translate }}
+                    </ion-label>
+                    <ion-textarea [(ngModel)]="description.details" [ngModelOptions]="{standalone: true }"></ion-textarea>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('personalDetailsOpen')">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="personalDetailsOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!personalDetailsOpen"></ion-icon>
+                    {{ "HAZARD.PERSONAL_DETAILS" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label>{{ "COMMON_FORM.BIRTH_YEAR" | translate }}</label>
+                    <basic-select [(selectedItem)]="personalDetails.selectedHazardBirthYear" [displayText]="personalDetails.selectedHazardBirthYear.text" [headerText]="'COMMON_FORM.YEAR_SELECT' | translate" [items]="birthYearChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label>{{ "COMMON_FORM.BIRTH_MONTH" | translate }}</label>
+                    <basic-select [(selectedItem)]="personalDetails.selectedHazardBirthMonth" [displayText]="personalDetails.selectedHazardBirthMonth.text" [headerText]="'COMMON_FORM.MONTH_SELECT' | translate" [items]="birthMonthChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label>{{ "COMMON_FORM.GENDER" | translate }}</label>
+                    <basic-select [(selectedItem)]="personalDetails.selectedHazardGender" [displayText]="personalDetails.selectedHazardGender.text" [headerText]="'COMMON_FORM.GENDER_SELECT' | translate" [items]="genderChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label>{{ "COMMON_FORM.CYCLING_FREQUENCY" | translate }}</label>
+                    <basic-select [(selectedItem)]="personalDetails.selectedHazardCyclingFrequency" [displayText]="personalDetails.selectedHazardCyclingFrequency.text" [headerText]="'COMMON_FORM.CYCLING_FREQUENCY_SELECT' | translate" [items]="cyclingFrequencyChoices"></basic-select>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <div>
+            <button type="reset" (click)="cancelHazard()">Cancel</button>
+            <button type="submit" (click)="submitHazard()">Submit</button>
+        </div>
+    </form>
+</ion-content>

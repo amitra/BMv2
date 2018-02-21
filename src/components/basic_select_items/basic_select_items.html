@@ -1,0 +1,14 @@
+<ion-header class="bma-header">
+    <ion-navbar class="bma-modal-back">
+        <ion-title>{{ headerText }}</ion-title>
+    </ion-navbar>
+</ion-header>
+      
+<ion-content class="outer-content">
+    <ion-list>
+        <button ion-item *ngFor="let item of items" (click)="itemSelected(item)">
+            {{ item.text }}
+        </button>
+    </ion-list>
+</ion-content>
+      
