@@ -1,0 +1,48 @@
+<ion-header class="bma-header">
+        <ion-toolbar>
+          <ion-title>
+            {{ "REGISTER.TITLE" | translate }}
+          </ion-title>
+        </ion-toolbar>
+    </ion-header>
+        <ion-content class="outer-content">
+            <div *ngIf="!complete">
+            <form>
+                <ion-list>
+                    <ion-item no-lines class="bma-login-bottom-border">
+                        <ion-label floating>{{ "REGISTER.USERNAME" | translate }}</ion-label>
+                        <ion-input [(ngModel)]="username" [ngModelOptions]="{standalone: true }"></ion-input>
+                    </ion-item>
+                    <div class="bma-login-fail" *ngFor="let error of errors.username">{{ error }}</div>
+                    <ion-item no-lines class="bma-login-bottom-border">
+                        <ion-label floating>{{ "REGISTER.EMAIL" | translate }}</ion-label>
+                        <ion-input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true }"></ion-input>
+                    </ion-item>
+                    <div class="bma-login-fail" *ngFor="let error of errors.email">{{ error }}</div>
+                    <ion-item no-lines class="bma-login-bottom-border">
+                        <ion-label floating>{{ "REGISTER.PASSWORD" | translate }}</ion-label>
+                        <ion-input type="password" [(ngModel)]="password1" [ngModelOptions]="{standalone: true }"></ion-input>
+                    </ion-item>
+                    <div class="bma-login-fail" *ngFor="let error of errors.password1">{{ error }}</div>
+                    <ion-item no-lines class="bma-login-bottom-border">
+                        <ion-label floating>{{ "REGISTER.CONFIRM_PASSWORD" | translate }}</ion-label>
+                        <ion-input type="password" [(ngModel)]="password2" [ngModelOptions]="{standalone: true }"></ion-input>
+                    </ion-item>
+                    <div class="bma-login-fail" *ngFor="let error of errors.password2">{{ error }}</div>
+                </ion-list>
+            </form>
+            <ion-buttons>
+                <button ion-button (click)="dismiss()" color="bma-blue" class=" bma-form-button-inverse bma-login-button">{{ "COMMON_FORM.CANCEL_BUTTON" | translate}}</button>
+                <button ion-button (click)="register()" color="bma-blue" class="bma-form-button">{{ "COMMON_FORM.SUBMIT_BUTTON" | translate }}</button>
+            </ion-buttons>
+        </div>
+        <div *ngIf="complete">
+                <div class="bma-register-success">{{ "REGISTER.SUCCESS" | translate }}</div>
+                <div class="padding">
+                    <button ion-button color="bma-blue" class="bma-form-button" (click)="dismiss()">
+                        {{ "BUTTONS.CONTINUE" | translate }}
+                    </button>
+                </div>
+            </div>
+      </ion-content>
+      

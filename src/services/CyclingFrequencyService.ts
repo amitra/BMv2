@@ -4,7 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Injectable()
 export class CyclingFrequencyService {
     frequency = [
-        { key: " ---------", text: "---------" },
+        { key: undefined, text: "---------" },
         { key: "Y", text: this.translate.instant("COMMON_FORM.YES") },
         { key: "N", text: this.translate.instant("COMMON_FORM.NO") },
         { key: "I don't know", text: this.translate.instant("COMMON_FORM.DONT_KNOW") }

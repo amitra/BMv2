@@ -8,7 +8,7 @@ export class HazardFormService {
         {
             text: "Infrastructure",
             items: [
-                { key: "---------", text: "---------" },
+                { key: undefined, text: "---------" },
                 { key: "Curb", text: this.translate.instant("HAZARD.CURB") },
                 { key: "Train track", text: this.translate.instant("HAZARD.TRAIN_TRACK") },
                 { key: "Pothole", text: this.translate.instant("HAZARD.POTHOLE") },

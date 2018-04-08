@@ -2,13 +2,15 @@ import { Component, ViewChild } from "@angular/core";
 import { ModalController, Nav, Platform } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
-import { HomePage } from "../pages/home/home";
 import { ListPage } from "../pages/list/list";
 import { MapPage } from "../map/map";
 import { WelcomeModal } from "../pages/welcomeModal/welcomeModal";
 import { LegendPage } from "../legend/legend";
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { PersonalDetailsService } from "../services/Form_Services/PersonDetailsService";
+import { CoordService } from "../services/CoordService";
+import { AuthService } from "../services/AuthService";
 
 @Component({
   templateUrl: "app.html"
@@ -22,35 +24,40 @@ export class BikeMaps2 {
 
   legend: any = LegendPage;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private translateService: TranslateService, public modalCtrl: ModalController, public storage: Storage) {
+  constructor(private authServie: AuthService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private translateService: TranslateService, public modalCtrl: ModalController, public storageService: Storage, public personalDetailService: PersonalDetailsService, private coordService: CoordService) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: "Home", component: HomePage },
       { title: "List", component: ListPage }
     ];
-
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.translateService.setDefaultLang('en');
-      this.translateService.use('en');
       this.presentModal();
+      this.personalDetailService.Initialize();
+      this.coordService.Initialize();
+      this.authServie.initialize();
+
+      this.storageService.get("currentLanguage").then((val) => {
+          if (val) {
+            this.translateService.use(val);
+          } else {
+              this.translateService.use("en");
+          }
+      })
     });
   }
 
   presentModal() {
-    this.storage.get('hideWelcome').then((val) => {
+    this.storageService.get('hideWelcome').then((val) => {
       if (!val) {
         const modal = this.modalCtrl.create(WelcomeModal);
         modal.present();
-        console.log("hideWelcome value: " + val);
       }
     });
   }

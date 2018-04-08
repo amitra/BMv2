@@ -6,7 +6,7 @@
       
 <ion-content class="outer-content">
     <ion-list>
-        <button ion-item *ngFor="let item of items" (click)="itemSelected(item)">
+        <button ion-item class="bma-basic-select-item" *ngFor="let item of items" (click)="itemSelected(item)">
             {{ item.text }}
         </button>
     </ion-list>

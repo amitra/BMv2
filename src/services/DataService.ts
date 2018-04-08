@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Rx";
@@ -11,7 +11,7 @@ export class DataService {
     constructor(public http: Http) {
     }
 
-    public getIncidentData(incidentType: string, bbox?: string){
+    public getIncidentData(incidentType: string, bbox?: string) : any {
         if (bbox) {
             return this.http.get(`https://bikemaps.org/${incidentType}/.json?bbox=${bbox}`).map(res => res.json());
         } else {
@@ -19,6 +19,16 @@ export class DataService {
             .map((res: Response) => res.json())
             .catch(this.catchError)
         }
+    }
+
+    public submitIncidentData(incidentType: string, data: any) : any {
+        const headers = new Headers();
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json");
+
+        const options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`https://bikemaps.org/${incidentType}`, data, options);
     }
 
     private catchError(error: Response) {

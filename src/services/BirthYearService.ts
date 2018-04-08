@@ -7,7 +7,7 @@ export class BirthYearService {
 
     constructor() {
         this.maxYear = new Date().getFullYear() - 13;
-        this.years = [{key: "---------", text: "---------"}];
+        this.years = [{key: undefined, text: "---------"}];
         this.setYears();
     }
 

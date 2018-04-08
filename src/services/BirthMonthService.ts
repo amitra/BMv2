@@ -4,7 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Injectable()
 export class BirthMonthService {
     months = [
-        { key: '---------', text: '---------' },
+        { key: undefined, text: '---------' },
         { key: '1', text: this.translate.instant("COMMON_FORM.1") },
         { key: '2', text: this.translate.instant("COMMON_FORM.2") },
         { key: '3', text: this.translate.instant("COMMON_FORM.3") },

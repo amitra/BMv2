@@ -1,6 +1,6 @@
 <ion-list>
-    <button ion-item (click)="close()">Learn Ionic</button>
-    <button ion-item (click)="close()">Documentation</button>
-    <button ion-item (click)="close()">Showcase</button>
-    <button ion-item (click)="close()">GitHub Repo</button>
+    <button ion-item (click)="openLoginModal()" *ngIf="!isAuthenticated">{{ "MAP.LOGIN" | translate }}</button>
+    <button ion-item (click)="openAboutPage()">{{ "MAP.ABOUT" | translate }}</button>
+    <button ion-item (click)="openSettingsPage()">{{ "MAP.SETTINGS" | translate }}</button>
+    <button ion-item (click)="logout()" *ngIf="isAuthenticated">{{ "MAP.LOGOUT" | translate }}</button>
 </ion-list>

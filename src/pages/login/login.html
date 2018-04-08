@@ -1,0 +1,33 @@
+<ion-header class="bma-header">
+    <ion-toolbar>
+      <ion-title>
+        {{ "LOGIN.TITLE" | translate }}
+      </ion-title>
+    </ion-toolbar>
+</ion-header>
+  
+<ion-content class="outer-content">
+    <form>
+        <ion-list>
+            <ion-item no-lines class="bma-login-bottom-border">
+                <ion-input placeholder="{{'LOGIN.USERNAME' | translate}}" [(ngModel)]="username" [ngModelOptions]="{standalone: true }"></ion-input>
+            </ion-item>
+            <ion-item no-lines class="bma-login-bottom-border">
+                    <ion-input type="password" placeholder="{{'LOGIN.PASSWORD' | translate}}" [(ngModel)]="password" [ngModelOptions]="{standalone: true }"></ion-input>
+            </ion-item>
+        </ion-list>
+    </form>
+    <div class="bma-login-fail" *ngFor="let error of errors.password">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <div class="bma-login-fail" *ngFor="let error of errors.non_field_errors">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <div class="bma-login-fail" *ngFor="let error of errors.required">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <ion-buttons>
+        <button ion-button (click)="cancelLogin()" color="bma-blue" class=" bma-form-button-inverse bma-login-button">{{ "LOGIN.CANCEL" | translate}}</button>
+        <button ion-button (click)="login()" color="bma-blue" class="bma-form-button">{{ "LOGIN.SUBMIT" | translate }}</button>
+    </ion-buttons>
+    <div>
+        <div class="bma-login-link" (click)="createAccount()">{{ "LOGIN.CREATE" | translate }}</div>
+        <div class="bma-login-link" (click)="resetPassword()">{{ "LOGIN.RESET" | translate }}</div>
+    </div>
+    
+  </ion-content>
+  

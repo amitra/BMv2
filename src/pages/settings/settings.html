@@ -1,0 +1,20 @@
+<ion-header class="bma-header">
+    <ion-navbar class="bma-navbar">
+        <ion-title class="bma-title">
+            <div class="bma-header-text">{{ "SETTINGS.TITLE" | translate }}</div>
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+        
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label class="bma-form-label">{{ "SETTINGS.LANGUAGE" | translate }}</ion-label>
+            <ion-select [(ngModel)]="currentLanguage" [selectOptions]="selectOptions" interface="action-sheet" (ionChange)="onLanguageChange($event)" [cancelText]="cancelText">
+                <ion-option value="en">{{ "SETTINGS.ENGLISH" | translate }}</ion-option>
+                <ion-option value="fr">{{ "SETTINGS.FRENCH" | translate }}</ion-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+</ion-content>
+        

@@ -39,8 +39,21 @@ html, body, #map {
   background-image: linear-gradient(0deg, #2c3e50, #2c3e50 50%, transparent 50%);
   color: #fff;
 }
-.bma-button {
+.bma-form-button {
   text-transform: none;
+  min-width: 100px;
+}
+
+.bma-form-button-inverse {
+    text-transform: none;
+    background-color: #F0F0F0;
+    color: #2c3e50;
+    min-width: 100px;
+    margin-left: 10px;
+}
+
+.bma-form-button-inverse:hover {
+    background-color: #F0F0F0 !important;
 }
 
 .action-sheet-md .action-sheet-title {
@@ -51,13 +64,18 @@ html, body, #map {
 }
 
 .bma-form-section-header {
-    background-color: lightgray;
+    background-color: #ddd;
+    color: #2c3e50;
+    font-size: inherit;
+}
+
+.bma-blue-text {
     color: #2c3e50;
 }
 
-.bma-list-header .list-header-md {
-    margin-bottom: 0px;
-}
+// .bma-list-header .list-header-md {
+//     margin-bottom: 0px;
+// }
 
 .bma-list-header .label-md {
     margin: 0px 8px 0px 0px;
@@ -75,16 +93,53 @@ html, body, #map {
     display: inline-block;
 }
 
-.bma-textarea-label .item-input-has-focus .label-md[stacked],
-.input-has-focus .label-md[stacked],
-.item-input-has-focus .label-md[floating],
-.input-has-focus .label-md[floating] {
-  color: #2c3e50;
+.bma-form-invalid {
+    color: red !important;
+}
+
+.bma-form-label {
+    color: #2c3e50;
+}
+
+.bma-form-item .item .item-divider {
+    border-bottom: 1px;
+    border-bottom-color: #999;
+    color: #2c3e50;
+}
+
+.bma-form-textarea {
+    border: 1px;
+    border-color: #ccc;
+    border-style: solid;
+    margin: 15px 0 15px
+}
+
+.bma-stacked-label {
+    font-size: inherit !important;
+}
+
+.label-md {
+    color: #2c3e50;
+} 
+
+.item-input .item-md {
+    color: #2c3e50;
+}
+
+.bma-date-time {
+    border: 1px;
+    border-color: #ccc;
+    border-style: solid;
+    margin: 15px 0 15px 0;
+}
+
+.datetime-text {
+    margin-left: 15px;
 }
 
 .list-md .item-input.item-input-has-focus:last-child, .list-md.input-has-focus:last-child {
- border-bottom-color: #2c3e50;
- box-shadow: 0 1px 0 0 #2c3e50;
+    border-bottom-color: #2c3e50;
+    box-shadow: 0 1px 0 0 #2c3e50;
 }
 
 .list-md .item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus):last-child,
@@ -102,3 +157,9 @@ html, body, #map {
     color: #2c3e50;
 }
 
+.item-label-stacked ion-datetime {
+    border: 1px;
+    border-color: #ccc;
+    border-style: solid;
+    margin: 15px 0 15px 0;
+}

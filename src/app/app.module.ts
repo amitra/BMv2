@@ -5,7 +5,6 @@ import { BikeMaps2 } from "./app.component";
 import { MapPage } from "../map/map";
 import { WelcomeModal } from "../pages/welcomeModal/welcomeModal";
 import { LegendPage } from "../legend/legend";
-import { HomePage } from "../pages/home/home";
 import { ListPage } from "../pages/list/list";
 import { PopoverPage } from "../pages/popover/popover";
 import { HazardPage } from "../pages/hazard/hazard";
@@ -26,6 +25,17 @@ import { CyclingFrequencyService } from "../services/CyclingFrequencyService";
 import { BasicSelect } from "../components/basic_select/basic_select";
 import { BasicSelectItems } from "../components/basic_select_items/basic_select_items";
 import { HazardFormService } from "../services/Form_Services/HazardFormService";
+import { GroupSelect } from "../components/group_select/group_select";
+import { GroupSelectItems } from "../components/group_select_items/group_select_items";
+import { PersonalDetailsService } from "../services/Form_Services/PersonDetailsService";
+import { CoordService } from "../services/CoordService";
+import { TermsAndConditionsModal } from "../pages/termsAndConditionsModal/termsAndConditionsModal";
+import { AboutPage } from "../pages/about/about";
+import { SettingsPage } from "../pages/settings/settings";
+import { AuthService } from "../services/AuthService";
+import { LoginModal } from "../pages/login/login";
+import { RegisterModal } from "../pages/register/register";
+import { PasswordResetModal } from "../pages/password_reset/password_reset";
 
 export function TranslateLoaderFactory(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -34,15 +44,22 @@ export function TranslateLoaderFactory(http: Http) {
 @NgModule({
   declarations: [
     BikeMaps2,
-    HomePage,
     ListPage,
+    GroupSelect,
+    GroupSelectItems,
     MapPage,
     WelcomeModal,
     PopoverPage,
     LegendPage,
     HazardPage,
     BasicSelect,
-    BasicSelectItems
+    BasicSelectItems,
+    TermsAndConditionsModal,
+    AboutPage,
+    SettingsPage,
+    LoginModal,
+    RegisterModal,
+    PasswordResetModal
   ],
   imports: [
     BrowserModule,
@@ -60,14 +77,20 @@ export function TranslateLoaderFactory(http: Http) {
   bootstrap: [IonicApp],
   entryComponents: [
     BikeMaps2,
-    HomePage,
     ListPage,
     MapPage,
+    GroupSelectItems,
     WelcomeModal,
     PopoverPage,
     LegendPage,
     HazardPage,
-    BasicSelectItems
+    BasicSelectItems,
+    TermsAndConditionsModal,
+    AboutPage,
+    SettingsPage,
+    LoginModal,
+    RegisterModal,
+    PasswordResetModal
   ],
   providers: [
     StatusBar,
@@ -81,7 +104,11 @@ export function TranslateLoaderFactory(http: Http) {
     BirthMonthService,
     GenderService,
     CyclingFrequencyService,
-    HazardFormService
+    HazardFormService,
+    PersonalDetailsService,
+    CoordService,
+    AuthService,
+    Storage
   ]
 })
 export class AppModule {}

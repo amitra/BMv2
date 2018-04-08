@@ -6,6 +6,8 @@ import { HazardPage } from "../pages/hazard/hazard";
 import { IconService } from "../services/IconService";
 import { DataService } from "../services/DataService";
 import { PopupService } from "../services/PopupService";
+import { CoordService } from "../services/CoordService";
+import { Events } from "ionic-angular";
 
 import * as L from "leaflet";
 import "leaflet.markerCluster";
@@ -20,6 +22,7 @@ import * as _ from "underscore";
     selector: 'page-map',
     templateUrl: 'map.html'
 })
+
 
 export class MapPage implements OnInit {
 
@@ -59,6 +62,7 @@ export class MapPage implements OnInit {
     officialLayer;
     geofenceLayer;
 
+
     // Icons for the layers
     collisionIcon;
     nearmissIcon;
@@ -78,9 +82,9 @@ export class MapPage implements OnInit {
         
     };
 
-    constructor(public actionSheetController: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translate: TranslateService) {
-        translate.setDefaultLang("en");
+    constructor(public actionSheetController: ActionSheetController, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translateService: TranslateService, private coordService: CoordService) {
     }
+    
 
     ngOnInit():void {
         this.initializeMap(this.menuCtrl);
@@ -120,6 +124,10 @@ export class MapPage implements OnInit {
 
         this.extendedBounds = this.getExtendedBounds(this.map.getBounds());
         this.getIncidents(this.extendedBounds);
+
+        // Subscribe to events
+        this.events.subscribe("authService:login", this.handleLogin);
+        this.events.subscribe("authService:logout", this.handleLogout);
     }
 
   // Add all layers to the map
@@ -129,12 +137,13 @@ export class MapPage implements OnInit {
     this.esriBM = esri.basemapLayer("Streets").addTo(this.map);
 
     // Add Strava data
-    this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
-      minZoom: 3,
-      maxZoom: 16,
-      opacity: 0.8,
-      attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
-    }).addTo(this.map);
+    // this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
+    //   minZoom: 3,
+    //   maxZoom: 16,
+    //   opacity: 0.8,
+    //   attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
+    // }).addTo(this.map);
+
 
     // Add OSM bike infrastructure hosted at BikeMaps.org
     this.infrastructure = L.tileLayer.wms("https://bikemaps.org/WMS", {
@@ -621,6 +630,7 @@ pieChart(cluster) {
         // }, function(err) {
         // });
     }
+    
 
     // Arbitrarily increase size of bounding box
     getExtendedBounds(bnds){
@@ -656,10 +666,19 @@ pieChart(cluster) {
     closeMenu() {
         this.menuCtrl.close();
     }
+
+    presentPopover = ($event) => {
+        const popover = this.popoverCtrl.create(PopoverPage);
+        popover.present({
+            ev: $event
+        });
+    }
+
     
     // Temporarily hide incident data and show map reporting UI
     addReport = () => {
         if (this.showTargetMarker === false) {
+
             this.map.removeLayer(this.incidentData);
             this.showTargetMarker = true;
             this.vibration.vibrate(100);
@@ -673,36 +692,49 @@ pieChart(cluster) {
         this.showTargetMarker = false;
         this.map.addLayer(this.incidentData);
     }
- 
+
     // Show the report options on an ActionSheet
     showReportOptions() {
+        const mapCenter = this.map.getCenter();
+        this.coordService.coordinates[0] = mapCenter.lng;
+        this.coordService.coordinates[1] = mapCenter.lat;
+
         const actionSheet = this.actionSheetController.create({
-            title: "What type of incident are you reporting?",
+            title: this.translateService.instant("ACTIONSHEET.TITLE"),
             buttons: [
                 { 
-                    text: this.translate.instant("ACTIONSHEET.COLLISION"),
+                    text: this.translateService.instant("ACTIONSHEET.COLLISION"),
                 },
                 { 
-                    text: this.translate.instant("ACTIONSHEET.NEARMISS"),
+                    text: this.translateService.instant("ACTIONSHEET.NEARMISS"),
                 },
                 {
-                    text: this.translate.instant("ACTIONSHEET.HAZARD"),
+                    text: this.translateService.instant("ACTIONSHEET.HAZARD"),
                     handler: () => {
                         this.cancelReport();
                         this.navCtrl.push(HazardPage);
                     }
                 },
                 {
-                    text: this.translate.instant("ACTIONSHEET.THEFT"),
+                    text: this.translateService.instant("ACTIONSHEET.THEFT"),
                 },
                 { 
-                    text: this.translate.instant("ACTIONSHEET.CANCEL"),
+                    text: this.translateService.instant("ACTIONSHEET.CANCEL"),
                     role: "cancel",
                     handler: () => { this.cancelReport() }
                 }
             ]
         });
 
+
         actionSheet.present();
+    }
+
+    handleLogin = () => {
+        console.log("Login event happened");
+    }
+
+    handleLogout = () => {
+        console.log("Logout event happened");
     }
 }
