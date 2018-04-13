@@ -7,12 +7,15 @@ import { IconService } from "../services/IconService";
 import { DataService } from "../services/DataService";
 import { PopupService } from "../services/PopupService";
 import { CoordService } from "../services/CoordService";
+import { AuthService } from "../services/AuthService";
+import { AlertAreaService } from "../services/AlertAreaService";
 import { Events } from "ionic-angular";
 
 import * as L from "leaflet";
 import "leaflet.markerCluster";
 import esri from "esri-leaflet";
 import "leaflet-easybutton";
+import "leaflet-draw";
 
 import { Vibration } from "@ionic-native/vibration";
 import * as d3 from "d3";
@@ -22,7 +25,6 @@ import * as _ from "underscore";
     selector: 'page-map',
     templateUrl: 'map.html'
 })
-
 
 export class MapPage implements OnInit {
 
@@ -82,7 +84,11 @@ export class MapPage implements OnInit {
         
     };
 
-    constructor(public actionSheetController: ActionSheetController, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translateService: TranslateService, private coordService: CoordService) {
+    // Variables for Leaflet Draw controls
+    leafletDrawOptions;
+    drawControl;
+
+    constructor(public actionSheetController: ActionSheetController, private alertAreaService: AlertAreaService, private authService: AuthService, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translateService: TranslateService, private coordService: CoordService) {
     }
     
 
@@ -90,7 +96,7 @@ export class MapPage implements OnInit {
         this.initializeMap(this.menuCtrl);
     }
 
-    initializeMap(menuCtrl: MenuController):void {
+    initializeMap = (menuCtrl: MenuController):void => {
         this.map = new L.Map("map", {
             center: new L.LatLng(40.731253, -73.996139),
             zoom: 12,
@@ -128,51 +134,56 @@ export class MapPage implements OnInit {
         // Subscribe to events
         this.events.subscribe("authService:login", this.handleLogin);
         this.events.subscribe("authService:logout", this.handleLogout);
+        this.events.subscribe("authService:initialized", this.handleLogin);
+
+        // Add the drawing control to the map if the user is logged in
+        if (this.authService.isAuthenticated) {
+            this.map.addControl(this.drawControl);
+        }
     }
 
   // Add all layers to the map
   addLayers():void {
-    const _this = this;
-    // Add an Esri base map
-    this.esriBM = esri.basemapLayer("Streets").addTo(this.map);
+        const _me = this;
 
-    // Add Strava data
-    // this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
-    //   minZoom: 3,
-    //   maxZoom: 16,
-    //   opacity: 0.8,
-    //   attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
-    // }).addTo(this.map);
+        // Add an Esri base map
+        this.esriBM = esri.basemapLayer("Streets").addTo(this.map);
 
+        // Add Strava data
+        // this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
+        //   minZoom: 3,
+        //   maxZoom: 16,
+        //   opacity: 0.8,
+        //   attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
+        // }).addTo(this.map);
 
-    // Add OSM bike infrastructure hosted at BikeMaps.org
-    this.infrastructure = L.tileLayer.wms("https://bikemaps.org/WMS", {
-      layers: 'bikemaps_infrastructure',
-      format: 'image/png',
-      transparent: true,
-      version: '1.3.0'
-    });
+        // Add OSM bike infrastructure hosted at BikeMaps.org
+        this.infrastructure = L.tileLayer.wms("https://bikemaps.org/WMS", {
+        layers: 'bikemaps_infrastructure',
+        format: 'image/png',
+        transparent: true,
+        version: '1.3.0'
+        });
 
-    // Marker cluster layer for clustering incident data
-    this.incidentData = L.markerClusterGroup({
-      maxClusterRadius: 70,
-      polygonOptions: {
-        color: '#2c3e50',
-        weight: 3
-      },
-      iconCreateFunction: function (cluster) {
-        // var data = _this.serializeClusterData(cluster);
-        return _this.pieChart(cluster);
-      }
-    });
+        // Marker cluster layer for clustering incident data
+        this.incidentData = L.markerClusterGroup({
+        maxClusterRadius: 70,
+        polygonOptions: {
+            color: '#2c3e50',
+            weight: 3
+        },
+        iconCreateFunction: function (cluster) {
+            // var data = _this.serializeClusterData(cluster);
+            return _me.pieChart(cluster);
+        }
+        });
 
-    this.map.addLayer(this.incidentData);
+        this.map.addLayer(this.incidentData);
 
-    // Instantiate a layer for alert areas, but don't add data yet or add it to the map
-    this.alertAreaLayer = L.featureGroup([]);
-  }
+        // Instantiate a layer for alert areas, but don't add data yet or add it to the map
+        this.alertAreaLayer = new L.FeatureGroup();
+    }
 
-  
     // Add buttons to the map
     addButtons(menuCtrl: MenuController):void {
         const __this = this;
@@ -238,6 +249,73 @@ export class MapPage implements OnInit {
                 title: "report"
             }]
         }).addTo(this.map);
+
+        // Leaflet-Draw
+        this.leafletDrawOptions =  {
+            draw: {
+                polyline: false,
+                polygon: {
+                    allowIntersection: false,
+                    drawError:  {
+                        color: "#e1e100",
+                        message: "Oh snap! You can't draw that!"
+                    },
+                },
+                circle: false,
+                rectangle: false,
+                marker: false,
+                circlemarker: false
+            },
+            edit: {
+                featureGroup: this.alertAreaLayer,
+                edit: false,
+                remove: true
+            }
+        }
+
+        this.drawControl = new L.Control.Draw(this.leafletDrawOptions);
+    }
+
+
+    getAlertareas = () => {
+        if (this.authService.isAuthenticated) {
+           this.removeAlertAreas();
+           const alertAreas = this.alertAreaService.getAlertAreas(this.authService.currentUser.token).subscribe(data => {
+                this.geofenceLayer = L.geoJSON(data, {
+                    style: (feature) => {
+                        return {
+                            color: "#3b9972",
+                            weight: 2,
+                            opacity: 0.6,
+                            fillOpacity: 0.1,
+                            pk: feature.properties.pk,
+                            /*Mark the polygon with it's database id*/
+                            objType: 'polygon'
+                        }
+                    }
+                }).eachLayer((layer) => {
+                    this.alertAreaLayer.addLayer(layer);
+                });
+            }, err => {
+                if (err.error) {
+                    try {
+                        console.log(err.error);
+                    } catch (err) {
+                        // Do nothing
+                    }
+                }
+                 
+            });
+            this.map.addLayer(this.alertAreaLayer);
+        }
+    }
+
+    removeAlertAreas = () => {
+        if (this.alertAreaLayer) {
+            this.map.removeLayer(this.alertAreaLayer);
+            this.alertAreaLayer.clearLayers();
+            this.map.addLayer(this.alertAreaLayer);
+        }
     }
 
   // Setup the various event handlers
@@ -251,7 +329,10 @@ export class MapPage implements OnInit {
         const popupContent = _that.popupService.getPopup(e.layer);
         layer.bindPopup(popupContent, { closeOnClick: true }).openPopup();
     });
-    
+
+    // Setup handlers for Leaflet Draw
+    this.map.on(L.Draw.Event.CREATED, this.handleDrawCreated);
+    this.map.on(L.Draw.Event.DELETED, this.handleDrawDelete);
   }
 
   // Geolocation
@@ -674,7 +755,6 @@ pieChart(cluster) {
         });
     }
 
-    
     // Temporarily hide incident data and show map reporting UI
     addReport = () => {
         if (this.showTargetMarker === false) {
@@ -726,15 +806,64 @@ pieChart(cluster) {
             ]
         });
 
-
         actionSheet.present();
     }
 
     handleLogin = () => {
-        console.log("Login event happened");
+        if (this.authService.isAuthenticated) {
+            try {
+                this.map.removeControl(this.drawControl);    
+            } catch (err) {
+                // Do nothing
+            } finally {
+                this.map.addControl(this.drawControl);
+                this.getAlertareas();
+                this.legend.showAlertAreas = true;
+            }
+        }
     }
 
     handleLogout = () => {
-        console.log("Logout event happened");
+        this.map.removeControl(this.drawControl);
+        this.removeAlertAreas();
+        this.legend.showAlertAreas = false;
+    }
+
+    handleDrawCreated = (e) => {
+        var layer = e.layer;
+        if (e.layerType === "polygon") {
+            var feature = e.layer.toGeoJSON();
+            this.alertAreaService.submitAlertArea(feature, this.authService.currentUser.token).subscribe(data => {
+                try {
+                    this.getAlertareas();
+                    console.log("Alert area successfully created.");
+                } catch (err) {
+                    console.log(err);
+                }
+            }, err => {
+                console.log("An error occurred while creating the alert area: " + err);
+            });
+        }
+    }
+
+    handleDrawDelete = (obj) => {
+        let deleteError = false;
+        if (obj && obj.layers) {
+            obj.layers.eachLayer((layer) => {
+                if (layer.options && layer.options.pk) {
+                    this.alertAreaService.deleteAlertArea(layer.options.pk, this.authService.currentUser.token).subscribe(data => {
+                    }, err => {
+                        deleteError = true;
+                    });
+                }
+            });
+        }
+
+        if (!deleteError) {
+            console.log("Alert areas successfully deleted.");
+        }
+        else {
+            console.log("An error occurred while deleting the alert area(s).");
+        }
     }
 }

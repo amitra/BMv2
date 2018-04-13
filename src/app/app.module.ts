@@ -36,6 +36,7 @@ import { AuthService } from "../services/AuthService";
 import { LoginModal } from "../pages/login/login";
 import { RegisterModal } from "../pages/register/register";
 import { PasswordResetModal } from "../pages/password_reset/password_reset";
+import { AlertAreaService } from "../services/AlertAreaService";
 
 export function TranslateLoaderFactory(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -108,7 +109,8 @@ export function TranslateLoaderFactory(http: Http) {
     PersonalDetailsService,
     CoordService,
     AuthService,
-    Storage
+    Storage,
+    AlertAreaService
   ]
 })
 export class AppModule {}

@@ -16,42 +16,42 @@ import { AuthService } from "../services/AuthService";
   templateUrl: "app.html"
 })
 export class BikeMaps2 {
-  @ViewChild(Nav) nav: Nav;
+    @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = MapPage;
+    rootPage: any = MapPage;
 
-  pages: Array<{title: string, component: any}>;
+    pages: Array<{title: string, component: any}>;
 
-  legend: any = LegendPage;
+    legend: any = LegendPage;
 
-  constructor(private authServie: AuthService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private translateService: TranslateService, public modalCtrl: ModalController, public storageService: Storage, public personalDetailService: PersonalDetailsService, private coordService: CoordService) {
-    this.initializeApp();
+    constructor(private authServie: AuthService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private translateService: TranslateService, public modalCtrl: ModalController, public storageService: Storage, public personalDetailService: PersonalDetailsService, private coordService: CoordService) {
+        this.initializeApp();
 
-    // used for an example of ngFor and navigation
-    this.pages = [
-      { title: "List", component: ListPage }
-    ];
-  }
+        // used for an example of ngFor and navigation
+        this.pages = [
+        { title: "List", component: ListPage }
+        ];
+    }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      this.translateService.setDefaultLang('en');
-      this.presentModal();
-      this.personalDetailService.Initialize();
-      this.coordService.Initialize();
-      this.authServie.initialize();
+    initializeApp() {
+        this.platform.ready().then(() => {
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+        this.translateService.setDefaultLang('en');
+        this.presentModal();
+        this.personalDetailService.Initialize();
+        this.coordService.Initialize();
+        this.authServie.initialize();
 
-      this.storageService.get("currentLanguage").then((val) => {
-          if (val) {
-            this.translateService.use(val);
-          } else {
-              this.translateService.use("en");
-          }
-      })
-    });
-  }
+        this.storageService.get("currentLanguage").then((val) => {
+            if (val) {
+                this.translateService.use(val);
+            } else {
+                this.translateService.use("en");
+            }
+        })
+        });
+    }
 
   presentModal() {
     this.storageService.get('hideWelcome').then((val) => {

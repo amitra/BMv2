@@ -14,7 +14,7 @@ export class AuthService {
     constructor(private events: Events, private http: Http, public storage: Storage) {
     }
 
-    initialize(): void {
+    initialize(): any {
         this.storage.ready().then(() => {
             this.storage.get("currentUser").then((val) => {
                 this.currentUser = val 
@@ -24,7 +24,7 @@ export class AuthService {
                 } else {
                     this.isAuthenticated = false;
                 }
-            
+                this.events.publish("authService:initialized");
             });
         });
     }
@@ -41,7 +41,7 @@ export class AuthService {
                 // login successful if there's a key with a token in the response
                 let token = response.json() && response.json().key;
                 if (token) {
-                    this.currentUser = {username: username, token: token };
+                    this.currentUser = { username: username, token: token };
                     this.isAuthenticated = true;
                     this.events.publish("authService:login");
 
