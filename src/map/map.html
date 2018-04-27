@@ -36,10 +36,10 @@
 <ion-menu side="right" [content]="content" class="bma-side-menu">
   <ion-header class="bma-side-menu-header">
     <ion-toolbar>
-      <ion-title>{{ "MAP.LAYERS" | translate }}</ion-title>
+      <ion-title>{{ "LEGEND.LAYERS" | translate }}</ion-title>
       <ion-buttons end>
         <button ion-button icon-only (click)="closeMenu()">
-          // <ion-icon class="bma-icon-blue" name="ion-close-round"></ion-icon>
+          <ion-icon class="bma-icon-blue" name="ion-close-round"></ion-icon>
           <ion-icon name="ion-close-round"></ion-icon>
         </button>
       </ion-buttons>
@@ -47,7 +47,67 @@
   </ion-header>
 
   <ion-content>
-    Legend Content
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showCollisions" (click)="toggleCollisionLayer()"></ion-checkbox>
+        <ion-label>
+            <i class="legend-collision fa fa-bicycle icon-black"></i>
+            {{ "LEGEND.COLLISION" | translate }}
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showNearmiss" (click)="toggleNearmissLayer()"></ion-checkbox>
+        <ion-label>
+            <i class="legend-nearmiss fa fa-bicycle icon-black"></i>
+            {{ "LEGEND.NEARMISS" | translate }}
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showHazards" (click)="toggleHazardLayer()"></ion-checkbox>
+        <ion-label>
+            <i class="legend-hazard fa fa-warning icon-black"></i>
+            {{ "LEGEND.HAZARD" | translate }}
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showThefts" (click)="toggleTheftLayer()"></ion-checkbox>
+        <ion-label>
+            <i class="legend-theft fa fa-bicycle icon-black"></i>
+            {{ "LEGEND.THEFT" | translate }}
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showStravaHM" (click)="toggleStravaHM()"></ion-checkbox>
+        <ion-label>
+            <div>
+                {{ "LEGEND.STRAVA" | translate }}
+            </div>
+        </ion-label>
+    </ion-item>
+    <div *ngIf="legend.showStravaHM">
+        <div class="legend-strava"></div>
+        <div class="legend-strava-text">
+            <div class="bma-align-left">{{ "LEGEND.LESS" | translate }}</div>
+            <div class="bma-align-right">{{ "LEGEND.MORE" | translate }}</div>
+        </div>
+    </div>
+    <ion-item *ngIf="authService.isAuthenticated">
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showAlertAreas" (click)="toggleAlertAreas()"></ion-checkbox>
+        <ion-label>
+            {{ "LEGEND.ALERT" | translate }}
+        </ion-label>
+    </ion-item>
+    <div class="alert-area-box" *ngIf="authService.isAuthenticated && legend.showAlertAreas"></div>
+    <ion-item>
+        <ion-checkbox class="bma-legend-checkbox" [(ngModel)]="legend.showInfrastructure" (click)="toggleInfrastructure()"></ion-checkbox>
+        <ion-label>
+            {{ "LEGEND.INFRASTRUCTURE" | translate }}
+        </ion-label>
+    </ion-item>
+    <div class="legend-subtext-infrastructure" *ngIf="legend.showInfrastructure">
+        <div class="bikerack"></div><span> {{ "LEGEND.BIKE_RACK" | translate }}</span><br>
+        <div class="bikelane solidlane thicklane"></div><span>{{ "LEGEND.PROTECTED_BIKE_LANE" | translate }}</span><br>
+        <div class="bikelane solidlane"></div><span>{{ "LEGEND.BIKE_LANE" | translate }}</span><br>
+        <div class="bikelane dotlane"></div><span>{{ "LEGEND.OTHER" | translate }}</span>
+    </div>
   </ion-content>
-
 </ion-menu>

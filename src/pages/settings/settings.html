@@ -9,11 +9,15 @@
 <ion-content>
     <ion-list>
         <ion-item>
-            <ion-label class="bma-form-label">{{ "SETTINGS.LANGUAGE" | translate }}</ion-label>
+            <ion-label class="bma-form-label" style="color: #2c3e50;">{{ "SETTINGS.LANGUAGE" | translate }}</ion-label>
             <ion-select [(ngModel)]="currentLanguage" [selectOptions]="selectOptions" interface="action-sheet" (ionChange)="onLanguageChange($event)" [cancelText]="cancelText">
                 <ion-option value="en">{{ "SETTINGS.ENGLISH" | translate }}</ion-option>
                 <ion-option value="fr">{{ "SETTINGS.FRENCH" | translate }}</ion-option>
             </ion-select>
+        </ion-item>
+        <ion-item *ngIf="isAuthenticated">
+            <ion-label class="bma-form-label" style="color: #2c3e50;">{{ "SETTINGS.RECEIVE_NOTIFICATIONS" | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="receiveNotifications" color="bma-alt-blue" (ionChange)="toggleAlerts()"></ion-toggle>
         </ion-item>
     </ion-list>
 </ion-content>

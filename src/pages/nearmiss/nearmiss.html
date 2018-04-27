@@ -1,0 +1,181 @@
+<ion-header>
+        <ion-navbar>
+            <ion-title>
+                    <img src="url(/../assets/img/BikeMapsLogo.png" class="bma-header-logo">
+                {{ "INCIDENT.NEAR_MISS_TITLE" | translate }}
+            </ion-title>
+        </ion-navbar>
+    </ion-header>
+      
+    <ion-content id="hazard">
+        <form>
+            <ion-list class="bma-list-header">
+                <ion-list-header class="bma-form-section-header">
+                    <button class="bma-form-section-header" (click)="toggleSection('detailsOpen')" [ngClass]="{'bma-form-invalid' : dateAlert || timeAlert || incidentTypeAlert || objectTypeAlert || injuredAlert || impactAlert}">
+                        <ion-icon item-left name="arrow-dropdown" *ngIf="detailsOpen"></ion-icon>
+                        <ion-icon item-left name="arrow-dropright" *ngIf="!detailsOpen"></ion-icon>
+                        {{ "INCIDENT.NEAR_MISS_DETAILS" | translate }}
+                    </button>
+                </ion-list-header>
+                <ion-list>
+                    <ion-item class="bma-form-item" *ngIf="detailsOpen">
+                        <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : dateAlert}">{{ "COMMON_FORM.DATE" | translate }}</ion-label>
+                        <ion-datetime class="bma-date-time" displayFormat="MMM DD, YYYY" pickerFormat="MMM DD, YYYY" [(ngModel)]="incidentDetails.selectedDate" [ngModelOptions]="{ standalone: true }"></ion-datetime>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : timeAlert}">{{ "COMMON_FORM.TIME" | translate }}</ion-label>
+                        <ion-datetime displayFormat="hh:mm A" pickerFormat="hh:mm A" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [(ngModel)]="incidentDetails.selectedTime" [ngModelOptions]="{ standalone: true }"></ion-datetime>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : incidentTypeAlert}">{{ "INCIDENT.TYPE" | translate }}</label>
+                        <group-select [(selectedItem)]="incidentDetails.selectedIncidentType" [displayText]="incidentDetails.selectedIncidentType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [groups]="incidentTypeChoices"></group-select>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : objectTypeAlert}">{{ "INCIDENT.OBJECT_TYPE" | translate }}</label>
+                        <group-select [(selectedItem)]="incidentDetails.selectedObjectType" [displayText]="incidentDetails.selectedObjectType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [groups]="incidentObjectChoices"></group-select>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : injuredAlert}">{{ "INCIDENT.INJURED" | translate }}</label>
+                        <group-select [(selectedItem)]="incidentDetails.selectedInjuryType" [displayText]="incidentDetails.selectedInjuryType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [groups]="incidentInjuryChoices"></group-select>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : impactAlert}">{{ "INCIDENT.IMPACT" | translate }}</label>
+                        <basic-select [(selectedItem)]="incidentDetails.selectedImpactType" [displayText]="incidentDetails.selectedImpactType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="incidentImpactChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.PURPOSE" | translate }}</label>
+                        <basic-select [(selectedItem)]="incidentDetails.selectedPurposeType" [displayText]="incidentDetails.selectedPurposeType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="incidentPurposeChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="detailsOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.INVOLVEMENT" | translate }}</label>
+                        <basic-select [(selectedItem)]="incidentDetails.selectedInvolvementType" [displayText]="incidentDetails.selectedInvolvementType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="incidentInvolvementChoices"></basic-select>
+                    </ion-item>
+                </ion-list>
+            </ion-list>
+            <ion-list class="bma-list-header">
+                <ion-list-header class="bma-form-section-header">
+                    <button class="bma-form-section-header" (click)="toggleSection('conditionOpen')">
+                        <ion-icon item-left name="arrow-dropdown" *ngIf="conditionOpen"></ion-icon>
+                        <ion-icon item-left name="arrow-dropright" *ngIf="!conditionOpen"></ion-icon>
+                        {{ "COMMON_FORM.CONDITIONS" | translate }}
+                    </button>
+                </ion-list-header>
+                <ion-list>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.ROAD_CONDITIONS" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedConditions" [displayText]="conditions.selectedConditions.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="incidentConditionsChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.SIGHT_LINES" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedSightConditions" [displayText]="conditions.selectedSightConditions.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="sightConditionsChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.CARS_PARKED" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedCarsParked" [displayText]="conditions.selectedCarsParked.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="carsParkedChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.RIDING_ON" | translate }}</label>
+                        <group-select [(selectedItem)]="conditions.selectedRidingOn" [displayText]="conditions.selectedRidingOn.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [groups]="ridingOnChoices"></group-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.BIKE_LIGHTS" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedLight" [displayText]="conditions.selectedLight.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="lightChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.TERRAIN" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedTerrain" [displayText]="conditions.selectedTerrain.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="terrainChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.DIRECTION" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedDirection" [displayText]="conditions.selectedDirection.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="directionChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="conditionOpen">
+                        <label class="bma-form-label" style="color: #2c3e50;">{{ "INCIDENT.TURNING" | translate }}</label>
+                        <basic-select [(selectedItem)]="conditions.selectedTurning" [displayText]="conditions.selectedTurning.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="turningChoices"></basic-select>
+                    </ion-item>
+                </ion-list>
+            </ion-list>
+            <ion-list class="bma-list-header">
+                <ion-list-header class="bma-form-section-header">
+                    <button class="bma-form-section-header" (click)="toggleSection('descriptionOpen')">
+                        <ion-icon item-left name="arrow-dropdown" *ngIf="descriptionOpen"></ion-icon>
+                        <ion-icon item-left name="arrow-dropright" *ngIf="!descriptionOpen"></ion-icon>
+                        {{ "COMMON_FORM.DESCRIPTION" | translate }}
+                    </button>
+                </ion-list-header>
+                <ion-list>
+                    <ion-item *ngIf="descriptionOpen">
+                        <ion-label stacked style="color: #2c3e50;" class="bma-stacked-label">
+                            {{ "COMMON_FORM.DESCRIPTION_TEXT" | translate }}
+                        </ion-label>
+                        <ion-textarea class="bma-form-textarea" [(ngModel)]="description.details" [ngModelOptions]="{standalone: true }"></ion-textarea>
+                    </ion-item>
+                </ion-list>
+            </ion-list>
+            <ion-list class="bma-list-header">
+                <ion-list-header class="bma-form-section-header">
+                    <button class="bma-form-section-header" (click)="toggleSection('personalDetailsOpen')">
+                        <ion-icon item-left name="arrow-dropdown" *ngIf="personalDetailsOpen"></ion-icon>
+                        <ion-icon item-left name="arrow-dropright" *ngIf="!personalDetailsOpen"></ion-icon>
+                        {{ "COMMON_FORM.PERSONAL_DETAILS" | translate }}
+                    </button>
+                </ion-list-header>
+                <ion-list>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.WHERE_BIKEMAPS" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedSourceChoice" [displayText]="selectedSourceChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="sourceChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.BIRTH_YEAR" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedIncidentBirthYear" [displayText]="selectedIncidentBirthYear.text" [headerText]="'COMMON_FORM.YEAR_SELECT' | translate" [items]="birthYearChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.BIRTH_MONTH" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedIncidentBirthMonth" [displayText]="selectedIncidentBirthMonth.text" [headerText]="'COMMON_FORM.MONTH_SELECT' | translate" [items]="birthMonthChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.GENDER" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedIncidentGender" [displayText]="selectedIncidentGender.text" [headerText]="'COMMON_FORM.GENDER_SELECT' | translate" [items]="genderChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.CYCLING_FREQUENCY" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedIncidentCyclingFrequency" [displayText]="selectedIncidentCyclingFrequency.text" [headerText]="'COMMON_FORM.CYCLING_FREQUENCY_SELECT' | translate" [items]="cyclingFrequencyChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "INCIDENT.BICYCLE_TYPE" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedBicycleType" [displayText]="selectedBicycleType.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="bicycleTypeChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "INCIDENT.EBIKE" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedEbike" [displayText]="selectedEbike.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="eBikeChoices"></basic-select>
+                    </ion-item>                    
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.HELMET" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedHelmet" [displayText]="selectedHelmet.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="helmetChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <label class="bma-form-label">{{ "COMMON_FORM.INTOXICATED" | translate }}</label>
+                        <basic-select [(selectedItem)]="selectedIntoxicated" [displayText]="selectedIntoxicated.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="intoxicatedChoices"></basic-select>
+                    </ion-item>
+                    <ion-item *ngIf="personalDetailsOpen">
+                        <ion-checkbox type="checkbox" [(ngModel)]="selectedSavePersonalDetails" [ngModelOptions]="{standalone: true }"></ion-checkbox>
+                        <ion-label class="bma-form-label">{{ "COMMON_FORM.REMEMBER_PERSONAL_DETAILS" | translate }}</ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-list>
+            <ion-buttons>
+                <button ion-button color="bma-blue" class=" bma-form-button-inverse" (click)="cancelIncident()">
+                    {{ "COMMON_FORM.CANCEL_BUTTON" | translate }}
+                </button>
+                <button ion-button color="bma-blue" class="bma-form-button" [disabled]="!incidentTermsChecked" (click)="submitIncident()">
+                    {{ "COMMON_FORM.SUBMIT_BUTTON" | translate }}
+                </button>
+            </ion-buttons>
+            <ion-item>
+                <ion-checkbox type="checkbox" [(ngModel)]="incidentTermsChecked" [ngModelOptions]="{standalone: true}" (click)="showTerms()"></ion-checkbox>
+                <ion-label class="bma-form-label">
+                    {{ "COMMON_FORM.DISCLAIMER" | translate }}
+                </ion-label>
+            </ion-item>
+        </form>
+    </ion-content>

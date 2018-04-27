@@ -59,6 +59,10 @@
             </ion-list-header>
             <ion-list>
                 <ion-item *ngIf="personalDetailsOpen">
+                    <label class="bma-form-label">{{ "COMMON_FORM.WHERE_BIKEMAPS" | translate }}</label>
+                    <basic-select [(selectedItem)]="selectedSourceChoice" [displayText]="selectedSourceChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="sourceChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
                     <label class="bma-form-label">{{ "COMMON_FORM.BIRTH_YEAR" | translate }}</label>
                     <basic-select [(selectedItem)]="selectedHazardBirthYear" [displayText]="selectedHazardBirthYear.text" [headerText]="'COMMON_FORM.YEAR_SELECT' | translate" [items]="birthYearChoices"></basic-select>
                 </ion-item>
@@ -76,7 +80,7 @@
                 </ion-item>
                 <ion-item *ngIf="personalDetailsOpen">
                     <ion-checkbox type="checkbox" [(ngModel)]="selectedSavePersonalDetails" [ngModelOptions]="{standalone: true }"></ion-checkbox>
-                    <ion-label class="bma-form-label">{{ "COMMON_FORM.PERSONAL_DETAILS" | translate }}</ion-label>
+                    <ion-label class="bma-form-label">{{ "COMMON_FORM.REMEMBER_PERSONAL_DETAILS" | translate }}</ion-label>
                 </ion-item>
             </ion-list>
         </ion-list>

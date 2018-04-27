@@ -98,13 +98,139 @@
     background-color: #2c3e50;
 }
 
+.bma-legend-checkbox {
+    margin-right: 10px !important;
+}
 
+.legend-collision {
+    height: 25px;
+    width: 25px;
+    padding-top: 4px;
+    border-radius: 12.5px;
+    background: #d63e2a;
+    color: black;
+}
+.legend-nearmiss {
+    height: 25px;
+    width: 25px;
+    padding-top: 4px;
+    border-radius: 12.5px;
+    background: #f3952f;
+    color: black;
+}
+.legend-hazard {
+    height: 25px;
+    width: 25px;
+    padding-top: 4px;
+    border-radius: 12.5px;
+    background: #72b026;
+    color: black;
+}
+.legend-theft {
+    height: 25px;
+    width: 25px;
+    padding-top: 4px;
+    border-radius: 12.5px;
+    background: #575757;
+    color: #cbcbcb !important;
+}
 
+ion-label>i.fa-bicycle {
+    padding-left: 2.5px;
+}
 
+ion-label>i.fa-warning {
+    padding-left: 4px;
+}
 
+.legend-strava {
+    margin-left: 50px;
+    height: 5px;
+    width: 150px;
+    display: inline-block;
+    background: -moz-linear-gradient(left, rgba(255,105,255,.3) 10%, rgba(134,132,177,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(100%, rgba(255,105,255,.1)), color-stop(100%, rgba(134,132,177,1)));
+    background: -webkit-linear-gradient(left, rgba(255,105,255,.3) 10%, rgba(134,132,177,1) 100%);
+    background: -o-linear-gradient(left, rgba(255,105,255,.3) 10%, rgba(134,132,177,1) 100%);
+    background: -ms-linear-gradient(left, rgba(255,105,255,.3) 10%, rgba(134,132,177,1) 100%);
+    background: linear-gradient(to right, rgba(255,105,255,.3) 10%, rgba(134,132,177,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff69ff', endColorstr='#8684b1', GradientType=1 );
+}
 
+.legend-strava-text {
+    width: 150px;
+    margin-left: 50px;
+}
 
+.bma-align-left {
+    font-size: 0.8em;
+    float: left;
+}
 
+.bma-align-right {
+    font-size: 0.8em;
+    float: right;
+}
+
+.alert-area-box {
+    background: rgba(59, 153, 114, 0.1);
+    border: 2px solid rgba(59, 153, 114, 0.6);
+    height: 20px;
+    width: 32.36px; /*THE GOLDEN RATIO*/
+    display: inline-block;
+    margin-left: 50px;
+}
+
+.bikerack {
+    display: inline-block;
+    background: #666666;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    opacity: 0.5;
+    /*margin-top: -15px;*/
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.bikelane{
+    display:inline-block;
+    background: #666666;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.solidlane{
+    height:2px;
+    background: #ff0080;
+}
+
+.thicklane{
+    height: 3.5px;
+
+}
+
+.dotlane{
+    height: 3px;
+    border: 1px solid #ff0080;
+    background: #ff0080; /* not working, let's see some red */
+    background: repeating-linear-gradient(
+            to right,
+            #ff0080,
+            #ff0080 3px,
+            #ffffff 3px,
+            #ffffff 6px
+    );
+}
+
+.legend-subtext-infrastructure {
+    margin-left: 50px;
+}
+
+.bma-legend-icon {
+    margin-top: 4px;
+}
 
 /* required styles */
 

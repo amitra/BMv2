@@ -5,10 +5,12 @@ import { BirthYearService } from "../../services/BirthYearService";
 import { GenderService } from "../../services/GenderService";
 import { CyclingFrequencyService } from "../../services/CyclingFrequencyService";
 import { HazardFormService } from "../../services/Form_Services/HazardFormService";
+import { IncidentFormService } from "../../services/Form_Services/IncidentFormService";
 import { PersonalDetailsService } from "../../services/Form_Services/PersonDetailsService";
 import { CoordService } from "../../services/CoordService";
 import { DataService } from "../../services/DataService";
 import { TermsAndConditionsModal } from "../../pages/termsAndConditionsModal/termsAndConditionsModal";
+import { Events } from "ionic-angular";
 
 @Component({
     selector: 'page-hazard',
@@ -24,6 +26,7 @@ export class HazardPage implements OnInit {
     birthMonthChoices = this.birthMonthService.months;
     genderChoices = this.genderService.gender;
     cyclingFrequencyChoices = this.cyclingFrequencyService.frequency;
+    sourceChoices = this.incidentFormService.sourceChoices;
 
 
     // Hazard details pane
@@ -41,6 +44,7 @@ export class HazardPage implements OnInit {
     };
 
     // Personal Details Pane
+    selectedSourceChoice = this.sourceChoices[0];
     selectedSavePersonalDetails: boolean;
     selectedHazardBirthYear: any;
     selectedHazardBirthMonth: any;
@@ -53,7 +57,7 @@ export class HazardPage implements OnInit {
     hazardTypeAlert : boolean = false;
     hazardTermsChecked: boolean = false;
 
-    constructor(public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private hazardFormService: HazardFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController) {
+    constructor(private events: Events, private incidentFormService: IncidentFormService, public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private hazardFormService: HazardFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController) {
     }
 
     ngOnInit(): void {
@@ -127,13 +131,14 @@ export class HazardPage implements OnInit {
                     "age": this.selectedHazardBirthYear.key,
                     "birthmonth": this.selectedHazardBirthMonth.key,
                     "sex": this.selectedHazardGender.key,
-                    "regular_cyclist": this.selectedHazardCyclingFrequency.key
+                    "regular_cyclist": this.selectedHazardCyclingFrequency.key,
+                    "source": this.selectedSourceChoice.key
                 }
             };
 
             this.dataService.submitIncidentData("hazards", hazardForm)
                 .subscribe(data => {
-                    console.log(data);
+                    this.events.publish("pointAdded");
                 }, error => {
                     console.log(error);
                 });
@@ -170,6 +175,9 @@ export class HazardPage implements OnInit {
             const termsAndConditionsModal = this.modalCtrlr.create(TermsAndConditionsModal);
             termsAndConditionsModal.present();
         }
-        
+    }
+    showTermsHyperlink = () => {
+        const termsAndConditionsModal = this.modalCtrlr.create(TermsAndConditionsModal);
+        termsAndConditionsModal.present();
     }
 }

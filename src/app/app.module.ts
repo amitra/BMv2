@@ -37,6 +37,13 @@ import { LoginModal } from "../pages/login/login";
 import { RegisterModal } from "../pages/register/register";
 import { PasswordResetModal } from "../pages/password_reset/password_reset";
 import { AlertAreaService } from "../services/AlertAreaService";
+import { YesNoService } from "../services/YesNoService";
+import { TheftFormService } from "../services/Form_Services/TheftFormService";
+import { TheftPage } from "../pages/theft/theft";
+import { CollisionPage } from "../pages/collision/collision";
+import { NearmissPage } from "../pages/nearmiss/nearmiss";
+import { NotificationsPage } from "../pages/notifications/notifications";
+import { IncidentFormService } from "../services/Form_Services/IncidentFormService";
 
 export function TranslateLoaderFactory(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,7 +67,11 @@ export function TranslateLoaderFactory(http: Http) {
     SettingsPage,
     LoginModal,
     RegisterModal,
-    PasswordResetModal
+    PasswordResetModal,
+    TheftPage,
+    CollisionPage,
+    NearmissPage,
+    NotificationsPage
   ],
   imports: [
     BrowserModule,
@@ -91,7 +102,11 @@ export function TranslateLoaderFactory(http: Http) {
     SettingsPage,
     LoginModal,
     RegisterModal,
-    PasswordResetModal
+    PasswordResetModal,
+    CollisionPage,
+    TheftPage,
+    NearmissPage,
+    NotificationsPage
   ],
   providers: [
     StatusBar,
@@ -110,7 +125,10 @@ export function TranslateLoaderFactory(http: Http) {
     CoordService,
     AuthService,
     Storage,
-    AlertAreaService
+    AlertAreaService,
+    YesNoService,
+    TheftFormService,
+    IncidentFormService
   ]
 })
 export class AppModule {}

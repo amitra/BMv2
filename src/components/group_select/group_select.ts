@@ -37,7 +37,7 @@ export class GroupSelect {
         const groupModal = this.modalCtrlr.create(GroupSelectItems, params);
 
         groupModal.onDidDismiss((selection) => {
-            if (selection !== undefined) {
+            if (selection !== undefined && selection !== null) {
                 this.selectedItem = selection;
             }
         });

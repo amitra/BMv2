@@ -1,0 +1,122 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+                <img src="url(/../assets/img/BikeMapsLogo.png" class="bma-header-logo">
+            {{ "THEFT.TITLE" | translate }}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+  
+<ion-content id="hazard">
+    <form>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('detailsOpen')" [ngClass]="{'bma-form-invalid' : dateAlert || timeAlert || hazardTypeAlert}">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="detailsOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!detailsOpen"></ion-icon>
+                    {{ "THEFT.THEFT_DETAILS" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item class="bma-form-item" *ngIf="detailsOpen">
+                    <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : dateAlert}">{{ "THEFT.DATE" | translate }}</ion-label>
+                    <ion-datetime class="bma-date-time" displayFormat="MMM DD, YYYY" pickerFormat="MMM DD, YYYY" [(ngModel)]="theftDetails.selectedDate" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : timeAlert}">{{ "THEFT.TIME" | translate }}</ion-label>
+                    <ion-datetime displayFormat="hh:mm A" pickerFormat="hh:mm A" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [(ngModel)]="theftDetails.selectedTime" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedTheftChoiceAlert}">{{ "THEFT.STOLEN" | translate }}</label>
+                    <basic-select [(selectedItem)]="theftDetails.selectedTheftChoice" [displayText]="theftDetails.selectedTheftChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="theftChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedLockedChoiceAlert}">{{ "THEFT.LOCKED" | translate }}</label>
+                    <group-select [(selectedItem)]="theftDetails.selectedLockedChoice" [displayText]="theftDetails.selectedLockedChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [groups]="lockedChoices"></group-select>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedLockTypeChoiceAlert}">{{ "THEFT.LOCK_TYPE" | translate }}</label>
+                    <basic-select [(selectedItem)]="theftDetails.selectedLockTypeChoice" [displayText]="theftDetails.selectedLockTypeChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="lockTypeChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedLocationChoiceAlert}">{{ "THEFT.WHERE" | translate }}</label>
+                    <basic-select [(selectedItem)]="theftDetails.selectedLocationChoice" [displayText]="theftDetails.selectedLocationChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="locationChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedLightingChoiceAlert}">{{ "THEFT.LIGHTING" | translate }}</label>
+                    <basic-select [(selectedItem)]="theftDetails.selectedLightingChoice" [displayText]="theftDetails.selectedLightingChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="lightingChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="detailsOpen">
+                    <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedTrafficChoiceAlert}">{{ "THEFT.TRAFFIC" | translate }}</label>
+                    <basic-select [(selectedItem)]="theftDetails.selectedTrafficChoice" [displayText]="theftDetails.selectedTrafficChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="trafficChoices"></basic-select>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('descriptionOpen')">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="descriptionOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!descriptionOpen"></ion-icon>
+                    {{ "THEFT.DESCRIPTION" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item *ngIf="descriptionOpen">
+                    <ion-label stacked style="color: #2c3e50;" class="bma-stacked-label">
+                        {{ "COMMON_FORM.DESCRIPTION_TEXT" | translate }}
+                    </ion-label>
+                    <ion-textarea class="bma-form-textarea" [(ngModel)]="description.details" [ngModelOptions]="{standalone: true }"></ion-textarea>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <ion-list class="bma-list-header">
+            <ion-list-header class="bma-form-section-header">
+                <button class="bma-form-section-header" (click)="toggleSection('personalDetailsOpen')">
+                    <ion-icon item-left name="arrow-dropdown" *ngIf="personalDetailsOpen"></ion-icon>
+                    <ion-icon item-left name="arrow-dropright" *ngIf="!personalDetailsOpen"></ion-icon>
+                    {{ "COMMON_FORM.PERSONAL_DETAILS" | translate }}
+                </button>
+            </ion-list-header>
+            <ion-list>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label class="bma-form-label">{{ "COMMON_FORM.WHERE_BIKEMAPS" | translate }}</label>
+                    <basic-select [(selectedItem)]="selectedSourceChoice" [displayText]="selectedSourceChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="sourceChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label class="bma-form-label">{{ "COMMON_FORM.CYCLING_FREQUENCY" | translate }}</label>
+                    <basic-select [(selectedItem)]="selectedTheftCyclingFrequency" [displayText]="selectedTheftCyclingFrequency.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="cyclingFrequencyChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label class="bma-form-label">{{ "THEFT.POLICE_REPORT" | translate }}</label>
+                    <basic-select [(selectedItem)]="selectedPoliceReportChoice" [displayText]="selectedPoliceReportChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="policeReportChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <ion-label stacked style="color: #2c3e50;" class="bma-stacked-label">{{ "THEFT.POLICE_NUMBER" | translate }}</ion-label>
+                    <ion-input type="text" class="bma-form-textarea" [(ngModel)]="policeReportNumber" [ngModelOptions]="{standalone: true }" ></ion-input>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <label class="bma-form-label">{{ "THEFT.INSURANCE_CLAIM" | translate }}</label>
+                    <basic-select [(selectedItem)]="selectedInsuranceClaimChoice" [displayText]="selectedInsuranceClaimChoice.text" [headerText]="'COMMON_FORM.SELECT_OPTION' | translate" [items]="insuranceClaimChoices"></basic-select>
+                </ion-item>
+                <ion-item *ngIf="personalDetailsOpen">
+                    <ion-label stacked style="color: #2c3e50;" class="bma-stacked-label">{{ "THEFT.INSURANCE_NUMBER" | translate }}</ion-label>
+                    <ion-input type="text" class="bma-form-textarea" [(ngModel)]="insuranceClaimNumber" [ngModelOptions]="{standalone: true }"></ion-input>
+                </ion-item>
+            </ion-list>
+        </ion-list>
+        <ion-buttons>
+            <button ion-button color="bma-blue" class=" bma-form-button-inverse" (click)="cancelHazard()">
+                {{ "COMMON_FORM.CANCEL_BUTTON" | translate }}
+            </button>
+            <button ion-button color="bma-blue" class="bma-form-button" [disabled]="!theftTermsChecked" (click)="submitHazard()">
+                {{ "COMMON_FORM.SUBMIT_BUTTON" | translate }}
+            </button>
+        </ion-buttons>
+        <ion-item>
+            <ion-checkbox type="checkbox" [(ngModel)]="theftTermsChecked" [ngModelOptions]="{standalone: true}" (click)="showTerms()"></ion-checkbox>
+            <ion-label class="bma-form-label">
+                {{ "COMMON_FORM.DISCLAIMER" | translate }}
+            </ion-label>
+        </ion-item>
+    </form>
+</ion-content>

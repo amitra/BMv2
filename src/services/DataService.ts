@@ -1,3 +1,4 @@
+import { Events } from "ionic-angular"
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/catch';
@@ -8,7 +9,7 @@ import { Observable } from "rxjs/Rx";
 @Injectable()
 export class DataService {
 
-    constructor(public http: Http) {
+    constructor(private events: Events, public http: Http) {
     }
 
     public getIncidentData(incidentType: string, bbox?: string) : any {

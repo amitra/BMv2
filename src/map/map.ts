@@ -3,6 +3,9 @@ import { TranslateService } from "@ngx-translate/core";
 import { ActionSheetController, MenuController, NavController, Platform, PopoverController } from "ionic-angular";
 import { PopoverPage } from "../pages/popover/popover";
 import { HazardPage } from "../pages/hazard/hazard";
+import { TheftPage } from "../pages/theft/theft";
+import { CollisionPage } from "../pages/collision/collision";
+import { NearmissPage } from "../pages/nearmiss/nearmiss";
 import { IconService } from "../services/IconService";
 import { DataService } from "../services/DataService";
 import { PopupService } from "../services/PopupService";
@@ -10,6 +13,7 @@ import { CoordService } from "../services/CoordService";
 import { AuthService } from "../services/AuthService";
 import { AlertAreaService } from "../services/AlertAreaService";
 import { Events } from "ionic-angular";
+import { Storage } from '@ionic/storage';
 
 import * as L from "leaflet";
 import "leaflet.markerCluster";
@@ -41,7 +45,7 @@ export class MapPage implements OnInit {
     stravaHM;
 
     // Bike infrastructure from our WMS server
-    infrastructure;
+    infrastructureLayer;
 
     // Feature group layer for alert areas
     alertAreaLayer
@@ -76,44 +80,47 @@ export class MapPage implements OnInit {
     extendedBounds;
     newMapBounds;
 
-    // An object for syncing state of legend and state of markers on the map
-    legend;
-
-    // Strings that need translation in Javascript
-    trans = {
-        
+    // Object for managing layer visibliity
+    legend: any = {
+        showIncidentData: true,
+        showCollisions: true,
+        showNearmiss: true,
+        showHazards: true,
+        showThefts: true,
+        showStravaHM: true,
+        showAlertAreas: true,
+        showInfrastructure: false
     };
 
     // Variables for Leaflet Draw controls
     leafletDrawOptions;
     drawControl;
 
-    constructor(public actionSheetController: ActionSheetController, private alertAreaService: AlertAreaService, private authService: AuthService, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, public translateService: TranslateService, private coordService: CoordService) {
+    mapCenter;
+    zoom;
+
+    constructor(public actionSheetController: ActionSheetController, private alertAreaService: AlertAreaService, private authService: AuthService, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, private storage: Storage, public translateService: TranslateService, private coordService: CoordService) {
     }
     
-
     ngOnInit():void {
-        this.initializeMap(this.menuCtrl);
+        this.storage.get("lastCoords").then((val) => {
+            if (val && val.lat && val.lng && val.zoom) {
+                this.mapCenter = new L.LatLng(val.lat, val.lng);
+                this.zoom = val.zoom;
+            } else {
+                this.mapCenter = new L.LatLng(54.1, -124.7);
+                this.zoom = 4;
+            }
+            this.initializeMap(this.menuCtrl);
+        });
     }
 
     initializeMap = (menuCtrl: MenuController):void => {
         this.map = new L.Map("map", {
-            center: new L.LatLng(40.731253, -73.996139),
-            zoom: 12,
+            center: this.mapCenter,
+            zoom: this.zoom,
             zoomControl: false
         });
-
-        this.legend = {
-            showIncidentData: true,
-            showCollisions: true,
-            showNearmiss: true,
-            showHazards: true,
-            showThefts: true,
-            showOfficial: false,
-            showStravaHM: true,
-            showAlertAreas: false,
-            showInfrastructure: false
-        };
 
         // Get icons/markers for the map
         this.collisionIcon = this.iconService.getIcon("collision");
@@ -135,11 +142,16 @@ export class MapPage implements OnInit {
         this.events.subscribe("authService:login", this.handleLogin);
         this.events.subscribe("authService:logout", this.handleLogout);
         this.events.subscribe("authService:initialized", this.handleLogin);
+        this.events.subscribe("pointAdded", this.handlePointAdded);
 
         // Add the drawing control to the map if the user is logged in
         if (this.authService.isAuthenticated) {
             this.map.addControl(this.drawControl);
         }
+    }
+
+    handlePointAdded = () => {
+        this.updateIncidents(true);
     }
 
   // Add all layers to the map
@@ -150,27 +162,27 @@ export class MapPage implements OnInit {
         this.esriBM = esri.basemapLayer("Streets").addTo(this.map);
 
         // Add Strava data
-        // this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
-        //   minZoom: 3,
-        //   maxZoom: 16,
-        //   opacity: 0.8,
-        //   attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
-        // }).addTo(this.map);
+        this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
+          minZoom: 3,
+          maxZoom: 12,
+          opacity: 0.8,
+          attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
+        }).addTo(this.map);
 
         // Add OSM bike infrastructure hosted at BikeMaps.org
-        this.infrastructure = L.tileLayer.wms("https://bikemaps.org/WMS", {
-        layers: 'bikemaps_infrastructure',
-        format: 'image/png',
-        transparent: true,
-        version: '1.3.0'
+        this.infrastructureLayer = L.tileLayer.wms("https://bikemaps.org/WMS", {
+            layers: 'bikemaps_infrastructure',
+            format: 'image/png',
+            transparent: true,
+            version: '1.3.0'
         });
 
         // Marker cluster layer for clustering incident data
         this.incidentData = L.markerClusterGroup({
-        maxClusterRadius: 70,
-        polygonOptions: {
-            color: '#2c3e50',
-            weight: 3
+            maxClusterRadius: 70,
+            polygonOptions: {
+                color: '#2c3e50',
+                weight: 3
         },
         iconCreateFunction: function (cluster) {
             // var data = _this.serializeClusterData(cluster);
@@ -180,8 +192,9 @@ export class MapPage implements OnInit {
 
         this.map.addLayer(this.incidentData);
 
-        // Instantiate a layer for alert areas, but don't add data yet or add it to the map
+        // Alert areas
         this.alertAreaLayer = new L.FeatureGroup();
+        this.getAlertareas();
     }
 
     // Add buttons to the map
@@ -198,7 +211,7 @@ export class MapPage implements OnInit {
                 onClick: function () {
                     menuCtrl.open();
                 },
-                icon: "fa-truck",
+                icon: '<img alt="legend" src="assets/icon/layers.png" style="margin-top: 4px">',
                 title: "legend-toggle"
             }]
         }).addTo(this.map);
@@ -306,7 +319,9 @@ export class MapPage implements OnInit {
                 }
                  
             });
-            this.map.addLayer(this.alertAreaLayer);
+            if (this.legend.showAlertAreas) {
+                this.map.addLayer(this.alertAreaLayer);
+            }
         }
     }
 
@@ -432,6 +447,7 @@ pieChart(cluster) {
     });
   };
 
+
     // Update incidents data on map
     updateIncidents(force) {
         this.newMapBounds = this.map.getBounds();
@@ -443,11 +459,15 @@ pieChart(cluster) {
                 this.extendedBounds = this.getExtendedBounds(this.newMapBounds);
                 this.getIncidents(this.extendedBounds);
         }
+
+        var coords = this.map.getCenter();
+        var zoom = this.map.getZoom();
+        this.storage.set("lastCoords", { lat: coords.lat, lng: coords.lng, zoom: zoom });
     }
 
     updateCollisionsOnMap(data: any) {
         if (data) {
-            const _this = this;
+            const _this_ = this;
             this.collisions = data;
 
             if ( this.legend.showIncidentData && this.legend.showCollisions) {
@@ -461,7 +481,7 @@ pieChart(cluster) {
             this.collisionLayer = L.geoJSON(this.collisions.features, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
-                        icon: _this.collisionIcon
+                        icon: _this_.collisionIcon
                         // ftype: "collision",
                         // objType: feature.properties.model
                     })
@@ -476,7 +496,7 @@ pieChart(cluster) {
 
     updateNearmissOnMap(data: any) {
         if (data) {
-            const _this = this;
+            const _this_ = this;
             this.nearmiss = data;
 
             if ( this.legend.showIncidentData && this.legend.showNearmiss) {
@@ -490,7 +510,7 @@ pieChart(cluster) {
             this.nearmissLayer = L.geoJSON(this.nearmiss.features, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
-                        icon: _this.nearmissIcon
+                        icon: _this_.nearmissIcon
                         // ftype: "collision",
                         // objType: feature.properties.model
                     })
@@ -505,7 +525,7 @@ pieChart(cluster) {
 
     updateHazardsOnMap(data: any) {
         if (data) {
-            const _this = this;
+            const _this_ = this;
             this.hazards = data;
 
             if ( this.legend.showIncidentData && this.legend.showHazards) {
@@ -519,7 +539,7 @@ pieChart(cluster) {
             this.hazardLayer = L.geoJSON(this.hazards.features, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
-                        icon: _this.hazardIcon
+                        icon: _this_.hazardIcon
                         // ftype: "collision",
                         // objType: feature.properties.model
                     })
@@ -534,7 +554,7 @@ pieChart(cluster) {
 
     updateTheftsOnMap(data: any) {
         if (data) {
-            const _this = this;
+            const _this_ = this;
             this.thefts = data;
 
             if ( this.legend.showIncidentData && this.legend.showThefts) {
@@ -548,7 +568,7 @@ pieChart(cluster) {
             this.theftLayer = L.geoJSON(this.thefts.features, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
-                        icon: _this.theftIcon
+                        icon: _this_.theftIcon
                         // ftype: "collision",
                         // objType: feature.properties.model
                     })
@@ -755,6 +775,7 @@ pieChart(cluster) {
         });
     }
 
+
     // Temporarily hide incident data and show map reporting UI
     addReport = () => {
         if (this.showTargetMarker === false) {
@@ -773,6 +794,7 @@ pieChart(cluster) {
         this.map.addLayer(this.incidentData);
     }
 
+    
     // Show the report options on an ActionSheet
     showReportOptions() {
         const mapCenter = this.map.getCenter();
@@ -784,9 +806,17 @@ pieChart(cluster) {
             buttons: [
                 { 
                     text: this.translateService.instant("ACTIONSHEET.COLLISION"),
+                    handler: () => {
+                        this.cancelReport();
+                        this.navCtrl.push(CollisionPage);
+                    }
                 },
                 { 
                     text: this.translateService.instant("ACTIONSHEET.NEARMISS"),
+                    handler: () => {
+                        this.cancelReport();
+                        this.navCtrl.push(NearmissPage);
+                    }
                 },
                 {
                     text: this.translateService.instant("ACTIONSHEET.HAZARD"),
@@ -797,6 +827,10 @@ pieChart(cluster) {
                 },
                 {
                     text: this.translateService.instant("ACTIONSHEET.THEFT"),
+                    handler: () => {
+                        this.cancelReport();
+                        this.navCtrl.push(TheftPage);
+                    }
                 },
                 { 
                     text: this.translateService.instant("ACTIONSHEET.CANCEL"),
@@ -864,6 +898,86 @@ pieChart(cluster) {
         }
         else {
             console.log("An error occurred while deleting the alert area(s).");
+        }
+    }
+
+    // Methods for managing visibility of layers on the map
+
+    toggleCollisionLayer = () => {
+        if (this.collisionLayer) {
+            if (this.legend.showCollisions) {
+                this.incidentData.removeLayer(this.collisionLayer);
+                this.incidentData.addLayer(this.collisionLayer);
+            } else {
+                this.incidentData.removeLayer(this.collisionLayer);
+            }
+        }
+    }
+
+    toggleNearmissLayer = () => {
+        if (this.nearmissLayer) {
+            if (this.legend.showNearmiss) {
+                this.incidentData.removeLayer(this.nearmissLayer);
+                this.incidentData.addLayer(this.nearmissLayer);
+            } else {
+                this.incidentData.removeLayer(this.nearmissLayer);
+            }
+        }
+    }
+
+    toggleHazardLayer = () => {
+        if (this.hazardLayer) {
+            if (this.legend.showHazards) {
+                this.incidentData.removeLayer(this.hazardLayer);
+                this.incidentData.addLayer(this.hazardLayer);
+            } else {
+                this.incidentData.removeLayer(this.hazardLayer);
+            }
+        }
+    }
+
+    toggleTheftLayer = () => {
+        if (this.theftLayer) {
+            if (this.legend.showThefts) {
+                this.incidentData.removeLayer(this.theftLayer);
+                this.incidentData.addLayer(this.theftLayer);
+            } else {
+                this.incidentData.removeLayer(this.theftLayer);
+            }
+        }
+    }
+
+    toggleStravaHM = () => {
+        if (this.stravaHM) {
+            if (this.legend.showStravaHM) {
+                this.map.removeLayer(this.stravaHM);
+                this.map.addLayer(this.stravaHM);
+            } else {
+                this.map.removeLayer(this.stravaHM);
+            }
+        }
+    }
+
+    toggleAlertAreas = () => {
+        if (this.alertAreaLayer) {
+            if (this.legend.showAlertAreas) {
+                this.map.removeLayer(this.alertAreaLayer);
+                this.map.addLayer(this.alertAreaLayer);
+            } else {
+                this.map.removeLayer(this.alertAreaLayer);
+            }
+        }
+    }
+
+
+    toggleInfrastructure = () => {
+        if (this.infrastructureLayer) {
+            if (this.legend.showInfrastructure) {
+                this.map.removeLayer(this.infrastructureLayer);
+                this.map.addLayer(this.infrastructureLayer);
+            } else {
+                this.map.removeLayer(this.infrastructureLayer);
+            }
         }
     }
 }

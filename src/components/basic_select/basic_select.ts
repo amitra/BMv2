@@ -37,7 +37,7 @@ export class BasicSelect {
         const modal = this.modalCtrlr.create(BasicSelectItems, params);
 
         modal.onDidDismiss((selection) => {
-            if (selection !== undefined) {
+            if (selection !== undefined && selection !== null) {
                 this.selectedItem = selection;
             }
         });
