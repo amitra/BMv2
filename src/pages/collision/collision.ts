@@ -10,7 +10,7 @@ import { PersonalDetailsService } from "../../services/Form_Services/PersonDetai
 import { CoordService } from "../../services/CoordService";
 import { DataService } from "../../services/DataService";
 import { TermsAndConditionsModal } from "../../pages/termsAndConditionsModal/termsAndConditionsModal";
-import { Events } from "ionic-angular"
+import { Events } from "ionic-angular";
 
 @Component({
     selector: 'page-collision',

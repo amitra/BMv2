@@ -20,6 +20,18 @@ export class IconService {
 
     icons;
 
+    colIcon = L.AwesomeMarkers.icon({
+        icon: "fa-bicycle",
+        markerColor: 'red',
+        iconColor: 'black',
+    });
+
+    nearIcon = new L.AwesomeMarkers.Icon({
+        icon: "fa-bicycle",
+        markerColor: 'red',
+        iconColor: 'black',
+    });
+
     constructor() {
         L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
 

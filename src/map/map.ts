@@ -396,7 +396,6 @@ pieChart(cluster) {
     const outerR = (total >= 10 ? (total < 50 ? 20 : 25) : 15);
     const innerR = (total >= 10 ? (total < 50 ? 10 : 13) : 7);
   
-
     // Define the svg layer
     var width = 50,
     height = 50;
@@ -405,7 +404,7 @@ pieChart(cluster) {
     var g = svg.append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    var pie = d3.pie()
+    var pie = d3.pie<CountData>()
         .sort(null)
         .value(function(d) {
             return d.count;
@@ -422,7 +421,7 @@ pieChart(cluster) {
         .attr("class", "arc");
     
     arc.append("path")
-    .attr("d", path)
+    .attr("d", <any>path)
     .attr("fill", (d) => d.data.color);
   
     // Add center fill
@@ -441,12 +440,11 @@ pieChart(cluster) {
     .text(total)
   
     return new L.DivIcon({
-      html: (new window.XMLSerializer()).serializeToString(tag),
+      html: new XMLSerializer().serializeToString(tag),
       className: 'marker-cluster',
       iconSize: new L.Point(40, 40)
     });
   };
-
 
     // Update incidents data on map
     updateIncidents(force) {
@@ -980,4 +978,9 @@ pieChart(cluster) {
             }
         }
     }
+}
+
+class CountData {
+    color: number;
+    count: any;
 }

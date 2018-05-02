@@ -23,5 +23,5 @@
   "atom": {
     "rewriteTsconfig": false
   },
-  "typeRoots": ["types"]
+  "typeRoots": ["typess"]
 }
