@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController, ViewController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { AuthService } from "../../services/AuthService";
-import { TranslateService } from "@ngx-translate/core";
 import { RegisterModal } from "../register/register";
 import { PasswordResetModal } from "../password_reset/password_reset";
 
@@ -16,7 +14,7 @@ export class LoginModal {
     private password: string;
     private errors: any[] = [];
 
-    constructor(private authService: AuthService, private modalCtrl: ModalController, private translate: TranslateService, public viewCtrl: ViewController) {
+    constructor(private authService: AuthService, private modalCtrl: ModalController, public viewCtrl: ViewController) {
     }
 
 

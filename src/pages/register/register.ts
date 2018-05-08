@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ViewController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { AuthService } from "../../services/AuthService";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -15,9 +14,10 @@ export class RegisterModal {
     private password1: string;
     private password2: string;
     private errors: any = {};
-    private complete: boolean = false;
+    protected complete: boolean;
 
     constructor(private authService: AuthService, private translate: TranslateService, public viewCtrl: ViewController) {
+        this.complete = false;
     }
 
     register = () => {
@@ -32,9 +32,10 @@ export class RegisterModal {
                     this.errors = result;
                 }
             });
-        }     
+        } else {
+            this.complete = false;
+        }    
     }
-    
 
     validate = () => {
         let isValid = true;

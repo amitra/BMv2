@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { Observable } from "rxjs/Rx";
@@ -8,19 +9,17 @@ import { Observable } from "rxjs/Rx";
 @Injectable()
 export class AlertAreaService {
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     public getAlertAreas(token) : any {
         if (token) {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            headers.append("Accept", "application/json");
-            headers.append("Authorization", "Token " + token);
-            var options = new RequestOptions({ headers: headers });
+            const headers = new HttpHeaders()
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
+            .set("Authorization", "Token " + token);
             
-            return this.http.get(`https://bikemaps.org/alertareas.json`, options)
-            .map(res => res.json())
+            return this.http.get(`https://bikemaps.org/alertareas.json`, { headers })
             .catch(this.catchError);
             
         }
@@ -28,42 +27,36 @@ export class AlertAreaService {
 
     public submitAlertArea(data: any, token: string) : any {
         if (token) {
-            const headers = new Headers();
-            headers.append("Accept", "application/json");
-            headers.append("Content-Type", "application/json");
-            headers.append("Authorization", "Token " + token);
-            const options = new RequestOptions({ headers: headers });
+            const headers = new HttpHeaders()
+            .set("Accept", "application/json")
+            .set("Content-Type", "application/json")
+            .set("Authorization", "Token " + token);
     
-            return this.http.post(`https://bikemaps.org/alertareas/`, data, options)
-            .map(res => res.json())
+            return this.http.post(`https://bikemaps.org/alertareas/`, data, { headers })
             .catch(this.catchError);
         }
     }
 
     public deleteAlertArea(id: string, token: string) {
         if (token) {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            headers.append("Accept", "application/json");
-            headers.append("Authorization", "Token " + token);
-            var options = new RequestOptions({ headers: headers });
+            const headers = new HttpHeaders()
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
+            .set("Authorization", "Token " + token);
             
-            return this.http.delete(`https://bikemaps.org/alertareas/${id}.json`, options)
-            .map(res => res.json())
+            return this.http.delete(`https://bikemaps.org/alertareas/${id}.json`, { headers })
             .catch(this.catchError);
         }
     }
 
     public deleteAlertAreas(id: string, token: string): any {
         if (token) {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            headers.append("Accept", "application/json");
-            headers.append("Authorization", "Token " + token);
-            var options = new RequestOptions({ headers: headers });
+            const headers = new HttpHeaders()
+            .set("Content-Type", "application/json")
+            .set("Accept", "application/json")
+            .set("Authorization", "Token " + token);
             
-            return this.http.delete(`https://bikemaps.org/alertareas/${id}/.json`)
-            .map(res => res.json())
+            return this.http.delete(`https://bikemaps.org/alertareas/${id}/.json`, { headers })
             .catch(this.catchError);
         }
     }

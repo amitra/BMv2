@@ -17,7 +17,7 @@ import { Storage } from '@ionic/storage';
 
 import * as L from "leaflet";
 import "leaflet.markerCluster";
-import esri from "esri-leaflet";
+import * as esri from "esri-leaflet";
 import "leaflet-easybutton";
 import "leaflet-draw";
 
@@ -224,6 +224,7 @@ export class MapPage implements OnInit {
             states: [{
                 stateName: "geolocate",
                 onClick: function (btn, map) {
+                    __this.vibration.vibrate(100);
                     map.locate({
                     setView: true,
                     watch: false,
@@ -293,7 +294,7 @@ export class MapPage implements OnInit {
     getAlertareas = () => {
         if (this.authService.isAuthenticated) {
            this.removeAlertAreas();
-           const alertAreas = this.alertAreaService.getAlertAreas(this.authService.currentUser.token).subscribe(data => {
+           this.alertAreaService.getAlertAreas(this.authService.currentUser.token).subscribe(data => {
                 this.geofenceLayer = L.geoJSON(data, {
                     style: (feature) => {
                         return {
@@ -587,147 +588,6 @@ pieChart(cluster) {
         this.dataService.getIncidentData("nearmiss", bnds.toBBoxString()).subscribe(data => this.updateNearmissOnMap(this.nearmiss = data));
         this.dataService.getIncidentData("hazards", bnds.toBBoxString()).subscribe(data => this.updateHazardsOnMap(this.hazards = data));
         this.dataService.getIncidentData("thefts", bnds.toBBoxString()).subscribe(data => this.updateTheftsOnMap(this.thefts = data));
-
-
-        // this.collisions = Collision_Service.get({bbox: bnds.toBBoxString()});
-        // collisions.$promise.then(function () {
-        //     unfiltered_collisions = collisions;
-        //     if($scope.legend.filter) {
-        //         filterPoints();
-        //     }
-        //     if($scope.legend.incidentData && $scope.legend.collision) {
-        //         try {
-        //             incidentData.removeLayer(collisionLayer);
-        //         }
-        //         catch(err) {
-        //             // Nothing to do...tried to remove a layer that doesn't exist
-        //         }
-        //     }
-        //     collisionLayer = L.geoJson(collisions.features, {
-        //         pointToLayer: function (feature, latlng) {
-        //             return L.marker(latlng, {icon: collisionIcon,
-        //                                     ftype: 'collision',
-        //                                     objType: feature.properties.model})
-        //         }
-        //     });
-        //     if($scope.legend.incidentData && $scope.legend.collision) {
-        //         incidentData.addLayer(collisionLayer);
-        //     }
-        // }, function(err) {
-        // });
-
-        // // Get nearmiss data from BikeMaps api and add to map
-        // nearmiss = Nearmiss_Service.get({bbox: bnds.toBBoxString()});
-        // nearmiss.$promise.then(function () {
-        //     unfiltered_nearmiss = nearmiss;
-        //     if($scope.legend.filter) {
-        //         filterPoints();
-        //     }
-        //     if($scope.legend.incidentData && $scope.legend.nearmiss) {
-        //         try {
-        //             incidentData.removeLayer(nearmissLayer);
-        //         }
-        //         catch(err) {
-        //             // Nothing to do...tried to remove a layer that doesn't exist
-        //         }
-        //     }
-        //     nearmissLayer = L.geoJson(nearmiss.features, {
-        //         pointToLayer: function (feature, latlng) {
-        //             return L.marker(latlng, {icon: nearmissIcon,
-        //                                     ftype: 'nearmiss',
-        //                                     objType: feature.properties.model
-        //             })
-        //         }
-        //     });
-        //     if($scope.legend.incidentData && $scope.legend.nearmiss) {
-        //         incidentData.addLayer(nearmissLayer);
-        //     }
-        // }, function(err) {
-        // });
-
-        // // Get hazard data from BikeMaps api and add to map
-        // hazards = Hazard_Service.get({bbox: bnds.toBBoxString()});
-        // hazards.$promise.then(function () {
-        //     unfiltered_hazards = hazards;
-        //     if($scope.legend.filter) {
-        //         filterPoints();
-        //     }
-        //     if($scope.legend.incidentData && $scope.legend.hazard) {
-        //         try {
-        //             incidentData.removeLayer(hazardLayer);
-        //         }
-        //         catch(err) {
-        //             // Nothing to do...tried to remove a layer that doesn't exist
-        //         }
-        //     }
-        //     hazardLayer = L.geoJson(hazards.features, {
-        //         pointToLayer: function (feature, latlng) {
-        //             return L.marker(latlng, {icon: hazardIcon,
-        //                                     ftype: 'hazard',
-        //                                     objType: feature.properties.model})
-        //         }
-        //     });
-        //     if($scope.legend.incidentData && $scope.legend.hazard) {
-        //         incidentData.addLayer(hazardLayer);
-        //     }
-        // }, function(err) {
-        // });
-
-        // // Get theft data from BikeMaps api and add to map
-        // thefts = Theft_Service.get({bbox: bnds.toBBoxString()});
-        // thefts.$promise.then(function () {
-        //     unfiltered_thefts = thefts;
-        //     if($scope.legend.filter) {
-        //         filterPoints();
-        //     }
-        //     if($scope.legend.incidentData && $scope.legend.theft) {
-        //         try {
-        //             incidentData.removeLayer(theftLayer);
-        //         }
-        //         catch(err) {
-        //             // Nothing to do...tried to remove a layer that doesn't exist
-        //         }
-        //     }
-        //     theftLayer = L.geoJson(thefts.features, {
-        //         pointToLayer: function (feature, latlng) {
-        //             return L.marker(latlng, {icon: theftIcon,
-        //                                     ftype: 'theft',
-        //                                     objType: feature.properties.model})
-        //         }
-        //     });
-        //     if($scope.legend.incidentData && $scope.legend.theft) {
-        //         incidentData.addLayer(theftLayer);
-        //     }
-        // }, function(err) {
-        // });
-
-        // // Get official data from BikeMaps api and add to map
-        // official = Official_Service.get({bbox: bnds.toBBoxString()});
-        // official.$promise.then(function () {
-        //     unfiltered_official = official;
-        //     if($scope.legend.filter) {
-        //         filterPoints();
-        //     }
-        //     if($scope.legend.incidentData && $scope.legend.official) {
-        //         try {
-        //             incidentData.removeLayer(officialLayer);
-        //         }
-        //         catch(err) {
-        //             // Nothing to do...tried to remove a layer that doesn't exist
-        //         }
-        //     }
-        //     officialLayer = L.geoJson(official.features, {
-        //         pointToLayer: function (feature, latlng) {
-        //             return L.marker(latlng, {icon: officialIcon,
-        //                 ftype: 'official',
-        //                 objType: feature.properties.model})
-        //         }
-        //     });
-        //     if($scope.legend.incidentData && $scope.legend.official) {
-        //         incidentData.addLayer(officialLayer);
-        //     }
-        // }, function(err) {
-        // });
     }
     
 
@@ -862,7 +722,6 @@ pieChart(cluster) {
     }
 
     handleDrawCreated = (e) => {
-        var layer = e.layer;
         if (e.layerType === "polygon") {
             var feature = e.layer.toGeoJSON();
             this.alertAreaService.submitAlertArea(feature, this.authService.currentUser.token).subscribe(data => {

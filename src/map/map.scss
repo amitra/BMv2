@@ -4,8 +4,9 @@
 }
 .bma-header-text {
   display: inline-block;
-  font-family: faktos;
+  font-family: faktos !important;
   font-size: 21px;
+  margin-left: 5px;
 }
 .bma-header-logo {
   height: 25px;

@@ -11,7 +11,7 @@ import { HazardPage } from "../pages/hazard/hazard";
 import { IconService } from "../services/IconService";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
-import { Http, HttpModule } from "@angular/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { IonicStorageModule } from "@ionic/storage";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -45,7 +45,7 @@ import { NearmissPage } from "../pages/nearmiss/nearmiss";
 import { NotificationsPage } from "../pages/notifications/notifications";
 import { IncidentFormService } from "../services/Form_Services/IncidentFormService";
 
-export function TranslateLoaderFactory(http: Http) {
+export function TranslateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
@@ -75,14 +75,14 @@ export function TranslateLoaderFactory(http: Http) {
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     IonicModule.forRoot(BikeMaps2),
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: (TranslateLoaderFactory),
-        deps: [Http]
+        deps: [HttpClient]
       }
     }),
   ],
@@ -124,7 +124,6 @@ export function TranslateLoaderFactory(http: Http) {
     PersonalDetailsService,
     CoordService,
     AuthService,
-    Storage,
     AlertAreaService,
     YesNoService,
     TheftFormService,

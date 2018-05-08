@@ -35,21 +35,29 @@ export class BikeMaps2 {
 
     initializeApp() {
         this.platform.ready().then(() => {
-        this.statusBar.styleDefault();
-        this.splashScreen.hide();
-        this.translateService.setDefaultLang('en');
-        this.presentModal();
-        this.personalDetailService.Initialize();
-        this.coordService.Initialize();
-        this.authServie.initialize();
-
-        this.storageService.get("currentLanguage").then((val) => {
-            if (val) {
-                this.translateService.use(val);
-            } else {
-                this.translateService.use("en");
+            this.statusBar.styleDefault();
+            if (window.statusbar) {
+                if (this.platform.is("android")) {
+                    this.statusBar.backgroundColorByHexString("#00b0aa");
+                } else {
+                    this.statusBar.styleLightContent();
+                }
             }
-        })
+            
+            this.translateService.setDefaultLang('en');
+            this.presentModal();
+            this.personalDetailService.Initialize();
+            this.coordService.Initialize();
+            this.authServie.initialize();
+
+            this.storageService.get("currentLanguage").then((val) => {
+                if (val) {
+                    this.translateService.use(val);
+                } else {
+                    this.translateService.use("en");
+                }
+            });
+            this.splashScreen.hide();
         });
     }
 

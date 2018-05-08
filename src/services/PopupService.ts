@@ -11,7 +11,6 @@ export class PopupService {
         const feature = layer.feature;
         const type = feature.properties.p_type;
         let popup;
-        let date;
 
         if (type === "collision" || type === "nearmiss") {
             popup = '<strong>Type:</strong> ' + feature.properties.i_type + '<br><strong>';
