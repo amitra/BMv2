@@ -11,6 +11,7 @@ import { CoordService } from "../../services/CoordService";
 import { DataService } from "../../services/DataService";
 import { TermsAndConditionsModal } from "../../pages/termsAndConditionsModal/termsAndConditionsModal";
 import { Events } from "ionic-angular";
+import { DateTimePickerService } from "../../services/DateTimePickerService";
 
 @Component({
     selector: 'page-hazard',
@@ -57,7 +58,15 @@ export class HazardPage implements OnInit {
     hazardTypeAlert : boolean = false;
     hazardTermsChecked: boolean = false;
 
-    constructor(private events: Events, private incidentFormService: IncidentFormService, public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private hazardFormService: HazardFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController) {
+    // DateTimePicker variables
+    monthNames: any;
+    monthShortNames: any;
+    dayNames: any;
+    dayShortNames: any;
+    cancelText: string;
+    doneText: string;
+
+    constructor(private events: Events, private incidentFormService: IncidentFormService, public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private hazardFormService: HazardFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController, public dtService: DateTimePickerService) {
     }
 
     ngOnInit(): void {
@@ -76,6 +85,13 @@ export class HazardPage implements OnInit {
             this.selectedHazardGender = this.genderChoices[0],
             this.selectedHazardCyclingFrequency = this.cyclingFrequencyChoices[0]
         }
+
+        this.monthNames = this.dtService.monthNames;
+        this.monthShortNames = this.dtService.monthShortNames;
+        this.dayNames = this.dtService.dayNames;
+        this.dayShortNames = this.dtService.dayShortNames;
+        this.cancelText = this.dtService.cancelText;
+        this.doneText = this.dtService.doneText;
     }
 
     toggleSection = (section) => {

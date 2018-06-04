@@ -17,9 +17,9 @@
             </ion-item>
         </ion-list>
     </form>
-    <div class="bma-login-fail" *ngFor="let error of errors.password">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
-    <div class="bma-login-fail" *ngFor="let error of errors.non_field_errors">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
-    <div class="bma-login-fail" *ngFor="let error of errors.required">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <div class="bma-login-fail" *ngFor="let error of errors">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <!-- <div class="bma-login-fail" *ngFor="let error of errors.non_field_errors">{{ error }} {{ "LOGIN.FAIL" | translate }}</div>
+    <div class="bma-login-fail" *ngFor="let error of errors.required">{{ error }} {{ "LOGIN.FAIL" | translate }}</div> -->
     <ion-buttons>
         <button ion-button (click)="cancelLogin()" color="bma-blue" class=" bma-form-button-inverse bma-login-button">{{ "LOGIN.CANCEL" | translate}}</button>
         <button ion-button (click)="login()" color="bma-blue" class="bma-form-button">{{ "LOGIN.SUBMIT" | translate }}</button>

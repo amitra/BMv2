@@ -11,6 +11,7 @@ import { CoordService } from "../../services/CoordService";
 import { DataService } from "../../services/DataService";
 import { TermsAndConditionsModal } from "../../pages/termsAndConditionsModal/termsAndConditionsModal";
 import { Events } from "ionic-angular";
+import { DateTimePickerService } from "../../services/DateTimePickerService";
 
 @Component({
     selector: 'page-collision',
@@ -100,7 +101,15 @@ export class CollisionPage implements OnInit {
 
     incidentTermsChecked: boolean = false;
 
-    constructor(private events: Events, public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private incidentFormService: IncidentFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController) {
+    // DateTimePicker variables
+    monthNames: any;
+    monthShortNames: any;
+    dayNames: any;
+    dayShortNames: any;
+    cancelText: string;
+    doneText: string;
+
+    constructor(private events: Events, public navCtrl: NavController, public birthYearService: BirthYearService, public birthMonthService: BirthMonthService, private incidentFormService: IncidentFormService, private genderService: GenderService, private cyclingFrequencyService: CyclingFrequencyService, private personalDetailsService: PersonalDetailsService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController, public dtService: DateTimePickerService) {
     }
 
     ngOnInit(): void {
@@ -119,6 +128,13 @@ export class CollisionPage implements OnInit {
             this.selectedIncidentGender = this.genderChoices[0],
             this.selectedIncidentCyclingFrequency = this.cyclingFrequencyChoices[0]
         }
+
+        this.monthNames = this.dtService.monthNames;
+        this.monthShortNames = this.dtService.monthShortNames;
+        this.dayNames = this.dtService.dayNames;
+        this.dayShortNames = this.dtService.dayShortNames;
+        this.cancelText = this.dtService.cancelText;
+        this.doneText = this.dtService.doneText;
     }
 
     toggleSection = (section) => {

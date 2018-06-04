@@ -44,6 +44,7 @@ export class BikeMaps2 {
                 }
             }
             
+            this.splashScreen.hide();
             this.translateService.setDefaultLang('en');
             this.presentModal();
             this.personalDetailService.Initialize();
@@ -57,7 +58,6 @@ export class BikeMaps2 {
                     this.translateService.use("en");
                 }
             });
-            this.splashScreen.hide();
         });
     }
 

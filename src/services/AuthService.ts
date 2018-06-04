@@ -60,7 +60,7 @@ export class AuthService {
                     return false;
                 }
             })
-            .catch((err) => err);
+            .catch(this.catchError);
     }
 
     logout(): void {
@@ -80,7 +80,7 @@ export class AuthService {
             console.log(response);
             return true;
         })
-        .catch((err) => err);
+        .catch(this.catchError);
     }
 
     reset(email: string): Observable<any> {
@@ -92,6 +92,10 @@ export class AuthService {
         .map((response: Response) => {
             return true;
         })
-        .catch((err) => err); 
+        .catch(this.catchError); 
+    }
+
+    private catchError(error: Response) {
+        return Observable.throw(error || { error: "Unable to retrieve alert areas." });
     }
 }

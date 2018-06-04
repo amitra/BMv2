@@ -29,6 +29,18 @@ export class LoginModal {
                 } else {
                     this.errors = result;
                 }
+            }, err => {
+                if (err.error) {
+                    if (err.error.non_field_errors) {
+                        this.errors.push(err.error.non_field_errors);
+                    }
+                    if (err.error.password) {
+                        this.errors.push(err.error.password);
+                    }
+                    if (err.error.require) {
+                        this.errors.push(err.error.require);
+                    }
+                }
             });
         }
     }

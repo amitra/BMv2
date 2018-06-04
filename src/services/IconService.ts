@@ -32,6 +32,25 @@ export class IconService {
         iconColor: 'black',
     });
 
+    iconSmall = L.divIcon({
+        className: "leaflet-usermarker-small",
+        iconSize: [17, 17],
+        iconAnchor: [9, 9],
+        popupAnchor: [0, -10],
+        labelAnchor: [3, -4],
+        html: ''
+    });
+
+    circleStyle = {
+        stroke: true,
+        color: "#03f",
+        weight: 3,
+        opacity: 0.5,
+        fillOpacity: 0.15,
+        fillColor: "#03f",
+        clickable: false
+    };
+
     constructor() {
         L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
 
@@ -95,33 +114,4 @@ export class IconService {
       getColor(type) {
           return this.iconColors[type];
       }
-
-
-    //   // Converts a given geojson dataset to a CircleMarker point layer
-    //   geojsonCircleMarker(data, type) {
-    //       return L.geoJSON(data, {
-    //           pointToLayer: function(feature, latlng) {
-    //               return L.circleMarker(latlng, {
-    //                   radius: 3,
-    //                   fillColor: this.iconColors[type],
-    //                   color: "#000",
-    //                   weight: 1,
-    //                   opacity: 1,
-    //                   fillOpacity: 0.8
-    //               })
-    //           }
-    //       });
-    //   }
-
-      // Converts a given geojson polygon dataset to a polygon layer
-    //   geojsonPolygonMarker(data) {
-    //       return L.geoJSON(data, {
-    //           style: {
-    //               color: '#3b9972',
-    //               weight: 2,
-    //               opacity: 0.6,
-    //               fillOpacity: 0.1
-    //           }
-    //       });
-    //   }
 };

@@ -44,6 +44,7 @@ import { CollisionPage } from "../pages/collision/collision";
 import { NearmissPage } from "../pages/nearmiss/nearmiss";
 import { NotificationsPage } from "../pages/notifications/notifications";
 import { IncidentFormService } from "../services/Form_Services/IncidentFormService";
+import { DateTimePickerService } from "../services/DateTimePickerService";
 
 export function TranslateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -127,7 +128,8 @@ export function TranslateLoaderFactory(http: HttpClient) {
     AlertAreaService,
     YesNoService,
     TheftFormService,
-    IncidentFormService
+    IncidentFormService,
+    DateTimePickerService
   ]
 })
 export class AppModule {}

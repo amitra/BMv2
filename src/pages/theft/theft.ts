@@ -8,6 +8,7 @@ import { DataService } from "../../services/DataService";
 import { TermsAndConditionsModal } from "../../pages/termsAndConditionsModal/termsAndConditionsModal";
 import { YesNoService } from "../../services/YesNoService";
 import { Events } from "ionic-angular";
+import { DateTimePickerService } from "../../services/DateTimePickerService";
 
 @Component({
     selector: 'page-theft',
@@ -67,10 +68,24 @@ export class TheftPage implements OnInit {
 
     theftTermsChecked: boolean = false;
 
-    constructor(private events: Events, public navCtrl: NavController, private incidentFormService: IncidentFormService, private theftFormService: TheftFormService, private cyclingFrequencyService: CyclingFrequencyService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController, private yesNoService: YesNoService) {
+    // DateTimePicker variables
+    monthNames: any;
+    monthShortNames: any;
+    dayNames: any;
+    dayShortNames: any;
+    cancelText: string;
+    doneText: string;
+
+    constructor(private events: Events, public navCtrl: NavController, private incidentFormService: IncidentFormService, private theftFormService: TheftFormService, private cyclingFrequencyService: CyclingFrequencyService, private coordService: CoordService, private dataService: DataService, private modalCtrlr: ModalController, private yesNoService: YesNoService, public dtService: DateTimePickerService) {
     }
 
     ngOnInit(): void {
+        this.monthNames = this.dtService.monthNames;
+        this.monthShortNames = this.dtService.monthShortNames;
+        this.dayNames = this.dtService.dayNames;
+        this.dayShortNames = this.dtService.dayShortNames;
+        this.cancelText = this.dtService.cancelText;
+        this.doneText = this.dtService.doneText;
     }
 
     toggleSection = (section) => {

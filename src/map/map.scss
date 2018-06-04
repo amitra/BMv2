@@ -233,6 +233,13 @@ ion-label>i.fa-warning {
     margin-top: 4px;
 }
 
+.bma-userMarker {
+    background: url("assets/icon/bluedot.png");
+    background-size: 100%;
+    width: 17px;
+    height: 17px;
+}   
+
 /* required styles */
 
 .leaflet-pane,
@@ -579,7 +586,7 @@ ion-label>i.fa-warning {
   border-radius: 5px;
 }
 .leaflet-control-layers-toggle {
-  background-image: url(images/layers.png);
+  background-image: url(images/layers-2x.png);
   width: 36px;
   height: 36px;
 }

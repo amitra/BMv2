@@ -21,7 +21,12 @@ export class RegisterModal {
     }
 
     register = () => {
-        this.errors = {};
+        this.errors = {
+            email: [],
+            username: [],
+            password1: [],
+            password2: []
+        };
         if (this.validate()) {
             this.authService.register(this.username, this.password1, this.password2, this.email).subscribe((result) => {
                 if (result === true) {
@@ -30,6 +35,21 @@ export class RegisterModal {
                     this.errors.push("");    
                 } else {
                     this.errors = result;
+                }
+            }, err => {
+                if (err.error) {
+                    if (err.error.email) {
+                        this.errors.email.push(err.error.email);
+                    }
+                    if (err.error.username) {
+                        this.errors.username.push("An account with this username already exists.");
+                    }
+                    if (err.error.password1) {
+                        this.errors.password1.push(err.error.password1)
+                    }
+                    if (err.error.password2) {
+                        this.errors.password2.push(err.error.password2)
+                    }
                 }
             });
         } else {

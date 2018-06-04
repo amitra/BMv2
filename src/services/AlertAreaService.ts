@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -62,6 +61,6 @@ export class AlertAreaService {
     }
 
     private catchError(error: Response) {
-        return Observable.throw(error.json().error || { error: "Unable to retrieve alert areas." });
+        return Observable.throw(error || { error: "Unable to retrieve alert areas." });
     }
 }

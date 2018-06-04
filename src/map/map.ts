@@ -98,8 +98,18 @@ export class MapPage implements OnInit {
 
     mapCenter;
     zoom;
+    userMarkerIcon;
+    userMarker;
+
+
 
     constructor(public actionSheetController: ActionSheetController, private alertAreaService: AlertAreaService, private authService: AuthService, private events: Events, public menuCtrl: MenuController, public navCtrl: NavController, public popoverCtrl: PopoverController, public platform: Platform, private vibration: Vibration, public iconService: IconService, public dataService: DataService, public popupService: PopupService, private storage: Storage, public translateService: TranslateService, private coordService: CoordService) {
+    }
+
+    ionViewDidEnter() {
+        if (this.map) {
+            this.map.invalidateSize();
+        }
     }
     
     ngOnInit():void {
@@ -120,6 +130,12 @@ export class MapPage implements OnInit {
             center: this.mapCenter,
             zoom: this.zoom,
             zoomControl: false
+        });
+
+        this.userMarkerIcon = L.icon({
+            iconUrl: "assets/icon/bluedot.png",
+            iconSize: [17,17],
+            iconAnchor: [17, 17]
         });
 
         // Get icons/markers for the map
@@ -164,7 +180,7 @@ export class MapPage implements OnInit {
         // Add Strava data
         this.stravaHM = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ride/gray/{z}/{x}/{y}.png', {
           minZoom: 3,
-          maxZoom: 12,
+          maxZoom: 11,
           opacity: 0.8,
           attribution: '<a href=http://labs.strava.com/heatmap/>http://labs.strava.com/heatmap/</a>'
         }).addTo(this.map);
@@ -353,10 +369,11 @@ export class MapPage implements OnInit {
 
   // Geolocation
   geolocate(): void {
+      var self = this;
       /*        $ionicLoading.show({
        template: '<ion-spinner></ion-spinner>',
        });*/
-      this.map.locate({
+       self.map.locate({
           setView: true,
           watch: false,
           maxZoom: 15,
@@ -365,12 +382,16 @@ export class MapPage implements OnInit {
           maximumAge: 300,
       })
           .on('locationfound', function (location) {
-            /*          extendedBounds = getExtendedBounds($scope.map.getBounds());
-             $ionicLoading.hide(); */
+            self.extendedBounds = self.getExtendedBounds(self.map.getBounds());
+            if (!self.userMarker) {
+                self.userMarker = L.marker([location.latlng.lat,location.latlng.lng], { icon: self.userMarkerIcon} ).addTo(self.map);
+            }
           })
           .on('locationerror', function (e) {
             console.log(e);
-            // $ionicLoading.hide();
+            if (self.userMarker) {
+                self.map.removeLayer(self.userMarker);
+            }
             // navigator.notification.alert("We could not find your current location. Please enable location services.", null,"Location access denied");
           }
       )

@@ -10,7 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 export class PasswordResetModal {
     private email: string;
-    private errors: any = {};
+    private errors: any[] = [];
     protected complete: boolean;
 
     constructor(private authService: AuthService, private translate: TranslateService, public viewCtrl: ViewController) {
@@ -18,7 +18,6 @@ export class PasswordResetModal {
     }
 
     reset = () => {
-        this.errors = {};
         if (this.validate()) {
             this.authService.reset(this.email).subscribe((result) => {
                 if (result === true) {
@@ -39,7 +38,7 @@ export class PasswordResetModal {
         let isValid = true;
 
         if (this.email === undefined) {
-            this.errors.email = [this.translate.instant("REGISTER.REQUIRED")];
+            this.errors = [this.translate.instant("REGISTER.REQUIRED")];
             isValid = false;
         }
 

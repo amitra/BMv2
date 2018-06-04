@@ -20,11 +20,35 @@
                 <ion-list>
                     <ion-item class="bma-form-item" *ngIf="detailsOpen">
                         <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : dateAlert}">{{ "COMMON_FORM.DATE" | translate }}</ion-label>
-                        <ion-datetime class="bma-date-time" displayFormat="MMM DD, YYYY" pickerFormat="MMM DD, YYYY" [(ngModel)]="incidentDetails.selectedDate" [ngModelOptions]="{ standalone: true }"></ion-datetime>
+                        <ion-datetime
+                            class="bma-date-time"
+                            displayFormat="MMM DD, YYYY"
+                            pickerFormat="MMM DD, YYYY"
+                            [(ngModel)]="incidentDetails.selectedDate"
+                            [ngModelOptions]="{ standalone: true }"
+                            [dayNames] = "dayNames"
+                            [dayShortNames] = "dayShortNames" 
+                            [monthNames] = "monthNames"
+                            [monthShortNames] = "monthShortNames"
+                            [doneText] = "doneText"
+                            [cancelText] = "cancelText">
+                        </ion-datetime>
                     </ion-item>
                     <ion-item *ngIf="detailsOpen">
                         <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : timeAlert}">{{ "COMMON_FORM.TIME" | translate }}</ion-label>
-                        <ion-datetime displayFormat="hh:mm A" pickerFormat="hh:mm A" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [(ngModel)]="incidentDetails.selectedTime" [ngModelOptions]="{ standalone: true }"></ion-datetime>
+                        <ion-datetime
+                            displayFormat="hh:mm A"
+                            pickerFormat="hh:mm A"
+                            minuteValues="0,5,10,15,20,25,30,35,40,45,50,55"
+                            [(ngModel)]="incidentDetails.selectedTime"
+                            [ngModelOptions]="{ standalone: true }"
+                            [dayNames] = "dayNames"
+                            [dayShortNames] = "dayShortNames" 
+                            [monthNames] = "monthNames"
+                            [monthShortNames] = "monthShortNames"
+                            [doneText] = "doneText"
+                            [cancelText] = "cancelText">
+                        </ion-datetime>
                     </ion-item>
                     <ion-item *ngIf="detailsOpen">
                         <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : incidentTypeAlert}">{{ "INCIDENT.TYPE" | translate }}</label>

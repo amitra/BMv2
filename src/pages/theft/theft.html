@@ -20,11 +20,35 @@
             <ion-list>
                 <ion-item class="bma-form-item" *ngIf="detailsOpen">
                     <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : dateAlert}">{{ "THEFT.DATE" | translate }}</ion-label>
-                    <ion-datetime class="bma-date-time" displayFormat="MMM DD, YYYY" pickerFormat="MMM DD, YYYY" [(ngModel)]="theftDetails.selectedDate" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                    <ion-datetime
+                        class="bma-date-time"
+                        displayFormat="MMM DD, YYYY"
+                        pickerFormat="MMM DD, YYYY"
+                        [(ngModel)]="theftDetails.selectedDate"
+                        [ngModelOptions]="{standalone: true }"
+                        [dayNames] = "dayNames"
+                        [dayShortNames] = "dayShortNames" 
+                        [monthNames] = "monthNames"
+                        [monthShortNames] = "monthShortNames"
+                        [doneText] = "doneText"
+                        [cancelText] = "cancelText">
+                    </ion-datetime>
                 </ion-item>
                 <ion-item *ngIf="detailsOpen">
                     <ion-label stacked class="bma-stacked-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : timeAlert}">{{ "THEFT.TIME" | translate }}</ion-label>
-                    <ion-datetime displayFormat="hh:mm A" pickerFormat="hh:mm A" minuteValues="0,5,10,15,20,25,30,35,40,45,50,55" [(ngModel)]="theftDetails.selectedTime" [ngModelOptions]="{standalone: true }"></ion-datetime>
+                    <ion-datetime
+                        displayFormat="hh:mm A"
+                        pickerFormat="hh:mm A"
+                        minuteValues="0,5,10,15,20,25,30,35,40,45,50,55"
+                        [(ngModel)]="theftDetails.selectedTime"
+                        [ngModelOptions]="{standalone: true }"
+                        [dayNames] = "dayNames"
+                        [dayShortNames] = "dayShortNames" 
+                        [monthNames] = "monthNames"
+                        [monthShortNames] = "monthShortNames"
+                        [doneText] = "doneText"
+                        [cancelText] = "cancelText">
+                    </ion-datetime>
                 </ion-item>
                 <ion-item *ngIf="detailsOpen">
                     <label class="bma-form-label" style="color: #2c3e50;" [ngClass]="{'bma-form-invalid' : selectedTheftChoiceAlert}">{{ "THEFT.STOLEN" | translate }}</label>
